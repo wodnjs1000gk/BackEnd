@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hello World!</title>
+    <link rel="stylesheet" href="/css/master.css">
+  </head>
+  <body>
+    <h1>Hello
+      <% if(name){ %>
+        <span class="name"><%= name %>!</span>
+      <% } else { %>
+        <span class="stranger">Stranger!</span>
+      <% } %>
+    </h1>
+  </body>
+</html>
+
+<!-- 
+localhost:3000/hello 뒤에
+app.get('/hello', function(req,res){
+  res.render('hello', {name:req.query.nameQuery});
+});
+로 views의 hello.ejs를 get하고 query에 이름을 저장.
+app.get('/hello/:nameParam', function(req,res){
+  res.render('hello', {name:req.params.nameParam});
+});
+로 콜론(:)으로 시작되는 route은 해당 부분에 입력되는 route의 텍스트가 req.params에 저장.
+-->
