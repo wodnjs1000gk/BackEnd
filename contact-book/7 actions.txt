@@ -1,0 +1,33 @@
+- CRUD
+데이터의 생성, 조회, 수정, 삭제 (Create, Read, Update, Delete)
+
+- 7 Standard Actions
+CRUD를 웹개발에 맞게 좀 더 세분화 시킨 것
+ex)
+자료를 웹사이트에서 생성하기 위해서 웹사이트는 2가지 일을 해야 합니다.
+New - 생성폼(form)을 사용자에게 보여주고,
+Create - 전달 받은 자료를 실제로 생성하는 과정이 필요합니다.
+
+마찬가지로 자료를 수정하기 위해서 2가지 일을 해야 합니다.
+Edit - 수정폼을 사용자에게 보여주고,
+Update - 전달 받은 자료를 바탕으로 현재 자료를 수정합니다.
+
+자료를 조회하는 방법에는 두가지가 있습니다.
+Index - 자료들의 목록을 조회합니다.
+Show - 하나의 자료를 상세히 보여줍니다.
+
+자료를 삭제하는 것은 form이 필요하지 않습니다.
+Destroy - 자료를 삭제합니다.
+
+Action	http verbs	Route
+index 	GET		/data
+show 	GET		/data/:id
+new 	GET		/data/new
+create 	POST		/data
+edit 	GET		/data/:id/edit
+update 	PUT		/data/:id
+destroy 	DELETE		/data/:id
+
+data는 action의 대상을 나타내며 영어 복수형으로 적어줍니다.
+(예를 들어 전화번호의 new action이라면 route은 phones/new가 됩니다.)
+:id는 하나의 특정한 data를 나타내주는 key값으로 변화되는 값입니다.
