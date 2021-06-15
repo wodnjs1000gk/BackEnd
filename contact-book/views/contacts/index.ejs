@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+  <body>
+    <%- include('../partials/nav') %>
+<!-- <%- include %>를 사용해서 외부 ejs(head와 nav)를 가져왔습니다. -->
+    <div class="contact contact-index">
+      <h2>Index</h2>
+      <ul>
+        <% contacts.forEach(function(contact) { %>
+          <!-- contacts object에 forEach를 사용해서 코드를 반복해서 표시 -->
+          <li>
+            <%= contact.name %>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </body>
+</html>
