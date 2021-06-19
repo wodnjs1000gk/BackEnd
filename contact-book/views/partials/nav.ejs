@@ -1,10 +1,34 @@
-<nav>
-  <div>Contact Book</div>
-  <ul>
-    <li><a href="/contacts">Index</a></li>
-    <li><a href="/contacts/new">New</a></li>
-  </ul>
-</nav>
-
+<!-- nav.ejs -->
 <!-- 페이지마다 표시될 menu부분입니다.
 index와 new view로 이동하는 메뉴를 가지고 있습니다. -->
+
+<nav class="navbar navbar-expand-sm navbar-light bg-light mb-3">
+  <div class="container">
+    <div class="navbar-brand">Contact Book</div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a href="/contacts" class="nav-link">Index</a></li>
+        <li class="nav-item"><a href="/contacts/new" class="nav-link">New</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!--
+https://getbootstrap.com/docs/4.1/components/navbar
+
+- navbar: bootstrap navbar를 알리는 class입니다.
+- container: navbar 내용을 화면 가운데로 옮기는 목적으로 쓰였습니다.
+한번 이 class를 지운 후에 사이트를 보면 정확히 무슨 일을 하는
+class인지 쉽게 알 수 있습니다.
+- navbar-brand: 사이트 제목을 넣는 class입니다.
+- navbar-toggler: 작은 화면에서 메뉴를 숨기고 보여주는 버튼의 class입니다.
+- data-target에 적용될 id를 넣습니다.
+- collapse: 위 navbar-toggler class의 대상이 될 수 있는 class입니다.
+id를 맞춰줍니다.
+- navbar-nav: 실제 메뉴들을 가지는 class입니다.
+- nav-item: 개별 메뉴들을 가지는 class입니다.
+
+-->

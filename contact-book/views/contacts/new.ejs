@@ -1,3 +1,5 @@
+<!-- views/contacts/new.ejs -->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -6,23 +8,23 @@
   <body>
     <%- include('../partials/nav') %>
 
-    <div class="contact contact-new">
+    <div class="container contact contact-new">
       <h2>New</h2>
       <form class="contact-form" action="/contacts" method="post">
-        <div>
+        <div class="form-group">
           <label for="name">Name</label>
-          <input type="text" id="name" name="name" value="">
+          <input type="text" id="name" name="name" value="" class="form-control">
         </div>
-        <div>
+        <div class="form-group">
           <label for="email">Email</label>
-          <input type="text" id="email" name="email" value="">
+          <input type="text" id="email" name="email" value="" class="form-control">
         </div>
-        <div>
+        <div class="form-group">
           <label for="phone">Phone</label>
-          <input type="text" id="phone" name="phone" value="">
+          <input type="text" id="phone" name="phone" value="" class="form-control">
         </div>
         <div>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </div>
       </form>
     </div>
@@ -30,3 +32,7 @@
 </html>
 <!-- 새로운 주소를 만드는 form입니다.
 form이 submit되면 "/contacts"에 post를 요청하게 됩니다. -->
+<!-- 21-06-19 bootstrap
+기존 코드에서 container, btn btn-primary, form-group, form-control 등의
+bootstrap class가 추가
+-->

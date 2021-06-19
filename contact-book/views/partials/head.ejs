@@ -1,4 +1,33 @@
-<link rel="stylesheet" href="/css/master.css">
-<title>Contact</title>
-
+<!-- views/partials/head.ejs -->
 <!-- partial은 여러 페이지들에 중복되는 부분의 코드를 따로 빼 놓은 것. -->
+<meta name="viewport" content="width=device-width,initial-scale=1"> <!-- 1 -->
+<!--
+mobile 브라우저는 데스크탑 사이트를 작은 화면에 보여주기 위해
+자동으로 줌아웃을 하게 되어있습니다. viewport meta 태그로 이를 조절할 수 있습니다.
+width: device-width로 브라우저의 너비를 모바일 기기의 width로 지정합니다.
+initial-scale: 1은 100%를 뜻합니다. 즉 사이트의 줌을 바꾸지 않습니다.
+-->
+<!-- jquery & bootstrap --> <!-- 2 -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<!--
+ bootstrap 공식 사이트 Introduction 페이지
+ (https://getbootstrap.com/docs/4.1/getting-started/introduction)에서
+ 제공하는 방법대로 BootStrap을 설정하였습니다.
+ <link rel="stylesheet" href= ...>로 bootstrap css파일들을,
+ <script src= ...>로 boostarp에 필요한 js파일들을 불러오고 있습니다.
+-->
+
+<!-- my css -->
+<link rel="stylesheet" href="/css/master.css">
+
+<!--
+여기서 한가지 중요한 점은 내 css파일들(여기서는 'master.css')들을
+다른 라이브러리의 css파일들(여기서는 'bootstrap.min.css') 뒤에 둬야 합니다.
+css는 파일간에 충돌이 있는 경우 뒤에 호출된 스타일 효과를 우선시키기 때문입니다.
+-->
+
+<title>Contact</title>
