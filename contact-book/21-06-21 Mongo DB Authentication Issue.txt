@@ -1,0 +1,30 @@
+21-06-20
+Mongo DB Auth Error issue 발생
+
+Mongo DB 만드는 것부터 다시 짚어봄.
+
+1. https://cloud.mongodb.com/ 접속
+
+2. sign up 후 login
+
+3. Cluster - Build a Cluster
+
+3-1. Shared Cluster(free) - Create a Cluster
+
+3-2. Cloud Region 선택 - Asia Singapore - Create Cluster
+
+4. Security
+
+4-1. Database Access - Add New Database User - Authentication Method 선택 (Password)
+- ID, Password 입력 (Mongo DB와는 별개의 인증용 ID, PW) - Add User
+
+4-2. Network Access - Add IP Address - Allow Access From Anywhere - Confirm
+
+5. Cluster - 생성한 Cluster - CONNECT - Connect Your Application
+- 주소 복사 - <password> 부분을 생성한 인증용 PW로 변경
+mongodb+srv://wodnjs1000gk:<password>@cluster0.e6hxj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+
+6. 시작 - 시스템 환경변수 편집 - 환경 변수(N) - 사용자 변수 - 새로 만들기
+- 변수 이름 : MONGO_DB, 변수 값 : 위에서 복사한 주소에 비밀번호 변경한 것
+
+7. index에서 mongoose.connect(process.env.MONGO_DB);
