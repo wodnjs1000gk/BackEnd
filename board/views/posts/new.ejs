@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('../partials/head') %>
+  </head>
+  <body>
+    <%- include('../partials/nav') %>
+
+    <div class="container mb-3">
+
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-1 pl-2 pr-2">
+          <li class="breadcrumb-item"><a href="/">Home</a></li>
+          <li class="breadcrumb-item"><a href="/posts">Board</a></li>
+          <li class="breadcrumb-item active" aria-current="page">New Post</li>
+        </ol>
+      </nav>
+<!--
+https://getbootstrap.com/docs/4.4/components/breadcrumb 을 사용하였습니다.
+브레드 크럼이란, 빵 부스러기라는 뜻인데,
+아마 '헨젤과 그레텔'에서 빵 부스러기로 지나온 길을 남긴것에서
+이름을 가져온 것 같습니다.
+-->
+      <form action="/posts" method="post">
+
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input type="text" id="title" name="title" value="" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="body">Body</label>
+          <textarea id="body" name="body" rows="5" class="form-control"></textarea>
+        </div>
+
+        <div>
+          <a class="btn btn-primary" href="/posts">Back</a>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+      </form>
+
+    </div>
+  </body>
+</html>

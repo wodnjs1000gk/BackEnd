@@ -1,2 +1,10 @@
 'Open Sans' 폰트를 body에대가 적용해 주었습니다.
 이렇게 body에 css를 설정하면 전체 사이트에 적용됩니다.
+
+ellipsis는 해당 element의 text가 너무 길 경우, 넘치는 text를 ...로 표시해줍니다.
+
+.post-body{
+  white-space: pre-line;
+이 부분이 없으면 게시물 본문의 줄바꿈(/n)이 표현되지 않습니다.
+왜냐면 HTML에서의 줄바꿈은 <br/>이기 때문이죠.
+이 부분을 통해 /n이 제대로 줄바꿈을 표현할 수 있게 됩니다.
