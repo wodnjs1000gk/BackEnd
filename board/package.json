@@ -2,7 +2,7 @@
   "name": "board",
   "version": "1.0.0",
   "description": "SJW node.js practice - board",
-  "main": "index_FrontEnd.js",
+  "main": "index_CRUD-FrontEnd.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

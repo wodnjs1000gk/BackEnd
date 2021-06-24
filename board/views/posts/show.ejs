@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <%- include('../partials/head') %>
+    <%- include('../partials/head_board') %>
   </head>
   <body>
-    <%- include('../partials/nav') %>
+    <%- include('../partials/nav_board') %>
 
     <div class="container mb-3">
 
@@ -40,7 +40,7 @@ col-sm-?, col-md-?와 같이 사이즈를 지정해주면,
               <% if(post.updatedAt) { %>
                 <div><span>Updated</span> : <span data-date-time="<%= post.updatedAt %>"></span></div>
               <% } %>
-              <!-- 
+              <!--
 data-date-time이 Created, Updated 옆의 <span> element에 사용되었습니다.
 게시물이 작성된 시간, 수정된 시간이 년-월-일 시:분:초의 형태로 출력됩니다.
             -->
