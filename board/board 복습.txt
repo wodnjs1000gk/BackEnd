@@ -1,0 +1,15 @@
+구조 분석
+1. models
+사용할 데이터의 형태 (model)을 정의하는 곳.
+
+1-1. Post.js
+게시글의 형태(schema)
+{제목(title), 내용(body), 생성 시간(createdAt), 수정 시간(updatedAt)}
+다른 곳에서 사용할 수 있도록 mongoose.model로 지정 및 module.exports 로 수출.
+다른 곳에서 var XXX = Post; 하고 사용 가능
+
+1-2. User.js
+사용자 정보의 형태(schema)
+{닉네임(username), 비밀번호(password), 이름(name), 이메일(email)}
+toObject:{virtuals:true} 가상 schema를 사용할 것임.
+비밀번호 수정시 비밀번호 확인, 원래 비밀번호, 현재 비밀번호, 새 비밀번호를 그때만 사용하고 버림
