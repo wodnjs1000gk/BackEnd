@@ -9,7 +9,24 @@ var userSchema = mongoose.Schema({
     type:String,
     required:[true,'Username is required!'],
     match:[/^.{4,12}$/,'Should be 4-12 characters!'],
+    /*
+match에는 regex(Regular Expression, 정규표현식)이 들어가서
+값이 regex에 부합하는지 않으면 에러메세지를 내게 됩니다.
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Regular_Expressions
+regex(/^.{4,12}$/)를 해석해 보면,
+/^.{4,12}$/ : regex는 / /안에 작성합니다.
+              즉 / /를 통해 이게 regex임을 알수 있습니다.
+/^.{4,12}$/ : ^는 문자열의 시작 위치를 나타냅니다.
+/^.{4,12}$/ : .는 어떠한 문자열이라도 상관없음을 나타냅니다.
+/^.{4,12}$/ : {숫자1,숫자2}는 숫자1 이상, 숫자2 이하의 길이 나타냅니다.
+/^.{4,12}$/ : $는 문자열의 끝 위치를 나타냅니다.
+해석하면  "문자열의 시작 위치에 길이 4 이상 12 이하인 문자열이
+있고, 바로 다음이 문자열의 끝이여야 함".
+즉, 전체 길이가 4이상 12자리 이하의 문자열이라면
+이 regex를 통과할 수 있습니다.
+    */
     trim:true,
+    // trim은 문자열 앞뒤에 빈칸이 있는 경우 빈칸을 제거해 주는 옵션입니다.
     unique:true
   },
   password:{
@@ -26,6 +43,14 @@ var userSchema = mongoose.Schema({
   email:{
     type:String,
     match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,'Should be a vaild email address!'],
+    /*
+/ / : regex의 시작과 끝을 나타냄.
+^   : 문자열의 시작을 나타냄.
+[ ] : 문자셋(Character Set). 이 중괄호 안에서는 어떤 문자도 특수문자가 아니라 일반적으로 처리된다.
+[-] : 문자셋 속 하이픈. [a-d] = [abcd]
+\.  : 특수문자 앞 백슬래쉬. \다음에 오는 문자는 특별하지 않고 문자 그대로 해석된다.
+{2,}: 2자 이상이어야 한다.
+    */
     trim:true
   }
 },{
@@ -71,7 +96,14 @@ model에서 사용하고 싶은 항목들은 virtual로 만듭니다.
 
 // password validation
 var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
+/*
+8-16자리 문자열 중에 숫자랑 영문자가 반드시 하나 이상
+존재해야 한다는 뜻의 regex
+*/
 var passwordRegexErrorMessage = 'Should be minimum 8 characters of alphabet and number combination!';
+/*
+에러메세지가 반복되므로 변수로 선언
+*/
 userSchema.path('password').validate(function(v) {
 /*
 password를 DB에 생성,
@@ -94,6 +126,19 @@ validation callback 함수 속에서 this는 user model입니다.
       user.invalidate('passwordConfirmation', 'Password Confirmation is required.');
     }
 
+    if(!passwordRegex.test(user.password)){
+      /*
+정규표현식.test(문자열) 함수는 문자열에 정규표현식을 통과하는
+부분이 있다면 true를, 그렇지 않다면 false를 반환합니다.
+      */
+          user.invalidate('password', passwordRegexErrorMessage);
+          /*
+if(!passwordRegex.test(user.password))에서
+false가 반환되는 경우 미리 선언한 문자열로
+model.invalidate함수를 호출
+          */
+
+    }
     if(user.password !== user.passwordConfirmation) {
       user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!');
     }
