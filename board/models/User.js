@@ -5,10 +5,29 @@ var bcrypt = require('bcryptjs');
 
 // schema
 var userSchema = mongoose.Schema({
-  username:{type:String, required:[true,'Username is required!'], unique:true},
-  password:{type:String, required:[true,'Password is required!'], select:false},
-  name:{type:String, required:[true,'Name is required!']},
-  email:{type:String}
+  username:{
+    type:String,
+    required:[true,'Username is required!'],
+    match:[/^.{4,12}$/,'Should be 4-12 characters!'],
+    trim:true,
+    unique:true
+  },
+  password:{
+    type:String,
+    required:[true,'Password is required!'],
+    select:false
+  },
+  name:{
+    type:String,
+    required:[true,'Name is required!'],
+    match:[/^.{4,12}$/,'Should be 4-12 characters!'],
+    trim:true
+  },
+  email:{
+    type:String,
+    match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,'Should be a vaild email address!'],
+    trim:true
+  }
 },{
   toObject:{virtuals:true}
 });
@@ -51,6 +70,8 @@ model에서 사용하고 싶은 항목들은 virtual로 만듭니다.
 */
 
 // password validation
+var passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,16}$/;
+var passwordRegexErrorMessage = 'Should be minimum 8 characters of alphabet and number combination!';
 userSchema.path('password').validate(function(v) {
 /*
 password를 DB에 생성,
@@ -101,6 +122,9 @@ validation callback 함수 속에서 this는 user model입니다.
     user의 password hash값입니다. hash를 해독해서 text를 비교하는것이 아니라
     text값을 hash로 만들고 그 값이 일치하는 지를 확인하는 과정입니다.
     */
+    if(user.newPassword && !passwordRegex.test(user.newPassword)){
+      user.invalidate("newPassword", passwordRegexErrorMessage);
+    }
     if(user.newPassword !== user.passwordConfirmation) {
       user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!');
     }
