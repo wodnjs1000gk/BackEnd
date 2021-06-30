@@ -46,6 +46,11 @@ var methodOverride = require('method-override');
 var flash = require('connect-flash');
 var session = require('express-session');
 var passport = require('./config/passport');
+/*
+passport가 아닌, config/passport module를 passport 변수에
+담았습니다. passport 와 passport-local package는 index.js에
+require되지 않고 config의 passport.js에서 require됩니다.
+*/
 var app = express();
 
 // DB setting
@@ -74,6 +79,16 @@ app.use(session({secret:'MySecret', resave:true, saveUninitialized:true}));
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
+/*
+passport.initialize()는 passport를 초기화 시켜주는 함수,
+passport.session()는 passport를 session과 연결해 주는 함수로
+둘다 반드시 필요합니다.
+(session은 게시판 - User Error 처리에서 설치한
+express-session package로부터 생성되므로, 로그인을 구현하기
+위해서는 express-session package와 session생성 코드
+app.use(session({secret:'MySecret', resave:true,
+saveUninitialized:true}));가 반드시 필요합니다.)
+*/
 
 // Custom Middlewares
 app.use(function(req,res,next){
@@ -81,6 +96,31 @@ app.use(function(req,res,next){
   res.locals.currentUser = req.user;
   next();
 });
+/*
+app.use에 함수를 넣은 것을 middleware라고 합니다.
+사실 route에 위에 // Other settings에 있는 app.use들도
+middleware들이죠.
+app.use에 있는 함수는 request가 올때마다 route에 상관없이
+무조건 해당 함수가 실행됩니다.
+위치가 중요한데, app.use들 중에 위에 있는 것 부터 순서대로
+실행되기 때문이죠. route가 와도 마찬가지로 반드시 route 위에
+위치해야 합니다.
+app.use에 들어가는 함수는 route에 들어가는 함수와 동일한
+req, res, next의 3개의 parameter를 가집니다.
+함수안에 반드시 next()를 넣어줘야 다음으로 진행이 됩니다.
+*/
+/*
+req.isAuthenticated()는 passport에서 제공하는 함수로,
+현재 로그인이 되어있는지 아닌지를true,false로 return합니다.
+req.user는 passport에서 추가하는 항목으로 로그인이 되면
+session으로 부터 user를 deserialize하여 생성됩니다.
+(이 과정 역시 밑에서 살펴보겠습니다.)
+res.locals에 위 두가지를 담는데, res.locals에 담겨진
+변수는 ejs에서 바로 사용가능합니다.
+res.locals.isAuthenticated는 ejs에서 user가 로그인이 되어
+있는지 아닌지를 확인하는데 사용되고, res.locals.currentUser는
+로그인된 user의 정보를 불러오는데 사용됩니다.
+*/
 
 // Routes
 app.use('/', require('./routes/home'));
