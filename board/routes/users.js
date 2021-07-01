@@ -8,6 +8,7 @@ var User = require('../models/User');
 다만 id대신에 username을 route에 사용하였는데요,
 그냥 id말고 다른 항목도 route에 사용할 수도 있다는 것을 보여주기 위함입니다.
 */
+var util = require('../util');
 
 // Index
 router.get('/', function(req, res){
@@ -45,7 +46,7 @@ router.post('/', function(req, res){
   User.create(req.body, function(err, user){
     if(err){
       req.flash('user', req.body);
-      req.flash('errors', parseError(err));
+      req.flash('errors', util.parseError(err));
       return res.redirect('/users/new');
     }
     res.redirect('/users');
@@ -142,7 +143,7 @@ router.put('/:username', function(req, res, next){
       user.save(function(err, user){
         if(err){
           req.flash('user', req.body);
-          req.flash('errors', parseError(err));
+          req.flash('errors', util.parseError(err));
           return res.redirect('/users/'+req.params.username+'/edit');
         }
         res.redirect('/users/'+user.username);
