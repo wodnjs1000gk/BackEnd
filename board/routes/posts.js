@@ -4,6 +4,7 @@ var express  = require('express');
 var router = express.Router();
 var Post = require('../models/Post');
 var util = require('../util');
+// 게시판 - User Error 처리에서 변경된 것과 동일하게 변경되었습니다.
 
 // Index
 router.get('/', function(req, res){
@@ -91,6 +92,13 @@ router.put('/:id', function(req, res){
       req.flash('errors', util.parseError(err));
       return res.redirect('/posts/'+req.params.id+'/edit');
     }
+    /*
+board08 - Post Error에서 Post.findOneAndUpdate에
+{runValidators:true}이 추가되었습니다..
+findOneAndUpdate는 기본설정이 schema에 있는 validation을
+작동하지 않도록 되어 있기때문에 이 option을 통해서
+validation이 작동하도록 설정해 주어야 합니다.
+    */
     res.redirect('/posts/'+req.params.id);
   });
 });

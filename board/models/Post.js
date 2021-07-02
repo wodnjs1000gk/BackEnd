@@ -7,6 +7,7 @@ var postSchema = mongoose.Schema({
   createdAt:{type:Date, default:Date.now},
   updatedAt:{type:Date},
 });
+// post schema의 커스텀 에러메세지들이 추가되었습니다.
 
 // model & export
 var Post = mongoose.model('post', postSchema);

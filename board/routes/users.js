@@ -9,6 +9,9 @@ var User = require('../models/User');
 그냥 id말고 다른 항목도 route에 사용할 수도 있다는 것을 보여주기 위함입니다.
 */
 var util = require('../util');
+/*
+util이 require됬고, 기존에 parseError가 util.parseError로 바뀌었습니다.
+*/
 
 // Index
 router.get('/', function(req, res){
@@ -144,6 +147,9 @@ router.put('/:username', function(req, res, next){
         if(err){
           req.flash('user', req.body);
           req.flash('errors', util.parseError(err));
+          /*
+          기존에 parseError가 util.parseError로 바뀌었습니다.
+          */
           return res.redirect('/users/'+req.params.username+'/edit');
         }
         res.redirect('/users/'+user.username);
