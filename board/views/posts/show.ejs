@@ -36,6 +36,11 @@ col-sm-?, col-md-?와 같이 사이즈를 지정해주면,
 
           <div class="col-md-5 col-lg-4 col-xl-3 order-sm-1 order-md-2">
             <div class="post-info card m-2 p-2">
+              <div class="border-bottom pb-1 mb-1">
+                <span>Author</span> : <%= post.author ? post.author.username : "" %>
+              </div>
+              <!-- index와 마찬가지로 show에도 author 항목을 추가하고
+              author가 있는 경우 author의 username을 표시합니다. -->
               <div><span>Created</span> : <span data-date-time="<%= post.createdAt %>"></span></div>
               <% if(post.updatedAt) { %>
                 <div><span>Updated</span> : <span data-date-time="<%= post.updatedAt %>"></span></div>

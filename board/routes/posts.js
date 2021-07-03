@@ -8,9 +8,15 @@ var util = require('../util');
 
 // Index
 router.get('/', function(req, res){
-  Post.find({})                  // 1
-  .sort('-createdAt')            // 1
-  .exec(function(err, posts){    // 1
+  Post.find({})
+  .populate('author')
+  /*
+Model.populate()함수는 relationship이 형성되어 있는 항목의 값을 생성해 줍니다.
+현재 post의 author에는 user의 id가 기록되어 있는데,
+이 값을 바탕으로 실제 user의 값을 author에 생성하게 됩니다.
+  */
+  .sort('-createdAt')
+  .exec(function(err, posts){
     if(err) return res.json(err);
     res.render('posts/index', {posts:posts});
   });
@@ -49,6 +55,9 @@ router.get('/new', function(req, res){
 
 // create
 router.post('/', function(req, res){
+  req.body.author = req.user._id;
+  //글을 작성할때는 req.user._id를 가져와서 post의 author에 기록합니다.
+  //req.user는 로그인을 하면 passport에서 자동으로 생성해 줍니다.
   Post.create(req.body, function(err, post){
     if(err){
       req.flash('post', req.body);
@@ -61,11 +70,14 @@ router.post('/', function(req, res){
 
 // show
 router.get('/:id', function(req, res){
-  Post.findOne({_id:req.params.id}, function(err, post){
-    if(err) return res.json(err);
-    res.render('posts/show', {post:post});
-  });
+  Post.findOne({_id:req.params.id})
+    .populate('author')
+    .exec(function(err, post){
+      if(err) return res.json(err);
+      res.render('posts/show', {post:post});
+    });
 });
+// index와 마찬가지로 show에도 .populate()함수를 추가하였습니다.
 
 // edit
 router.get('/:id/edit', function(req, res){
