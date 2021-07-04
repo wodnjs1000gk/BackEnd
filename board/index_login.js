@@ -132,3 +132,13 @@ var port = 3000;
 app.listen(port, function(){
   console.log('server on! http://localhost:'+port);
 });
+
+
+/*
+Post - User relationship
+
+models/Post.js : postSchema에 author 항목 추가하고 ref:'user'로 데이터가
+user collection의 id와 연결됨을 mongoose에 알림.
+이렇게 user의 user.id와 poset의 post.author가 연결되어 user와 post간의
+relationship을 형성함
+*/
