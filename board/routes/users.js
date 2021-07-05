@@ -13,6 +13,7 @@ var util = require('../util');
 util이 require됬고, 기존에 parseError가 util.parseError로 바뀌었습니다.
 */
 
+/*
 // Index
 router.get('/', function(req, res){
   User.find({})
@@ -22,12 +23,19 @@ router.get('/', function(req, res){
       res.render('users/index', {users:users});
     });
 });
+*/
 /*
 지금까지의 index route과는 다르게, 찾은 값을 정렬하는 기능이 추가되었습니다.
 sort함수가 추가되었는데요, 이 함수에는 {username:1} 이 들어가서
 username을 기준으로 오름차순(asc)으로 정렬하고 있습니다.
 (-1을 넣으면 내림차순(desc)이 됩니다.)
 */
+/*
+게시판-접근제한
+user의 목록을 보여주는 기능(index)와 user를 삭제하는
+기능(destroy)은 더이상 필요하지 않으므로 지워줍시다.
+*/
+
 
 // New
 router.get('/new', function(req, res){
@@ -67,7 +75,7 @@ User model의 userSchema에 설정해둔 validation을 통과하지 못한
 */
 
 // show
-router.get('/:username', function(req, res){
+router.get('/:username', util.isLoggedin, checkPermission, function(req, res){
   User.findOne({username:req.params.username}, function(err, user){
     if(err) return res.json(err);
     res.render('users/show', {user:user});
@@ -75,7 +83,7 @@ router.get('/:username', function(req, res){
 });
 
 // edit
-router.get('/:username/edit', function(req, res){
+router.get("/:username/edit", util.isLoggedin, checkPermission, function(req, res){
   var user = req.flash('user')[0];
   var errors = req.flash('errors')[0] || {};
   if(!user){
@@ -104,7 +112,7 @@ user flash에서 값을 받는 경우 username이 달라 질 수도 있기
 */
 
 // update
-router.put('/:username', function(req, res, next){
+router.put("/:username", util.isLoggedin, checkPermission, function(req, res, next){
   User.findOne({username:req.params.username})
   /*
   이번에는 findOneAndUpdate함수대신에 findOne함수로 값을 찾은 후에 값을
@@ -157,6 +165,7 @@ router.put('/:username', function(req, res, next){
   });
 });
 
+/*
 // destroy
 router.delete('/:username', function(req, res){
   User.deleteOne({username:req.params.username}, function(err){
@@ -164,10 +173,26 @@ router.delete('/:username', function(req, res){
     res.redirect('/users');
   });
 });
+*/
+/*
+게시판 - 접근제한
+user의 목록을 보여주는 기능(index)와 user를 삭제하는
+기능(destroy)은 더이상 필요하지 않으므로 지워줍시다.
+*/
 
 module.exports = router;
 
 // functions
+
+function checkPermission(req, res, next){
+ User.findOne({username:req.params.username}, function(err, user){
+  if(err) return res.json(err);
+  if(user.id != req.user.id) return util.noPermission(req, res);
+
+  next();
+ });
+}
+
 function parseError(errors){
   var parsed = {};
   if(errors.name == 'ValidationError'){

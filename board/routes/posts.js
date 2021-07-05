@@ -47,14 +47,14 @@ object를 넣는 경우 {createdAt:1}(오름차순), {createdAt:-1}(내림차순
 */
 
 // New
-router.get('/new', function(req, res){
+router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
   var post = req.flash('post')[0] || {};
   var errors = req.flash('errors')[0] || {};
   res.render('posts/new', { post:post, errors:errors });
 });
 
 // create
-router.post('/', function(req, res){
+router.post('/', util.isLoggedin, function(req, res){
   req.body.author = req.user._id;
   //글을 작성할때는 req.user._id를 가져와서 post의 author에 기록합니다.
   //req.user는 로그인을 하면 passport에서 자동으로 생성해 줍니다.
@@ -80,7 +80,7 @@ router.get('/:id', function(req, res){
 // index와 마찬가지로 show에도 .populate()함수를 추가하였습니다.
 
 // edit
-router.get('/:id/edit', function(req, res){
+router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
   var post = req.flash('post')[0];
   var errors = req.flash('errors')[0] || {};
   if(!post){
@@ -96,7 +96,7 @@ router.get('/:id/edit', function(req, res){
 });
 
 // update
-router.put('/:id', function(req, res){
+router.put('/:id', util.isLoggedin, checkPermission, function(req, res){
   req.body.updatedAt = Date.now();
   Post.findOneAndUpdate({_id:req.params.id}, req.body, {runValidators:true}, function(err, post){
     if(err){
@@ -116,7 +116,7 @@ validation이 작동하도록 설정해 주어야 합니다.
 });
 
 // destroy
-router.delete('/:id', function(req, res){
+router.delete('/:id', util.isLoggedin, checkPermission, function(req, res){
   Post.deleteOne({_id:req.params.id}, function(err){
     if(err) return res.json(err);
     res.redirect('/posts');
@@ -124,3 +124,13 @@ router.delete('/:id', function(req, res){
 });
 
 module.exports = router;
+
+// private functions // 1
+function checkPermission(req, res, next){
+  Post.findOne({_id:req.params.id}, function(err, post){
+    if(err) return res.json(err);
+    if(post.author != req.user.id) return util.noPermission(req, res);
+
+    next();
+  });
+}
