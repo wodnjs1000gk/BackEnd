@@ -78,6 +78,17 @@ data-date-time이 Created, Updated 옆의 <span> element에 사용되었습니�
 edit, delete 버튼을 보여줍니다. currentUser 역시 req.locals에
 들어있어서 ejs에서 바로 사용할 수 있습니다.
       -->
+
+      <div>
+        <% if(isAuthenticated && currentUser.id == user.id){ %> <!-- 1 -->
+          <a class="btn btn-primary" href="/users/<%= user.username %>/edit">Edit</a>
+        <% } %>
+      </div>
+      <!--
+로그인이 된 상태이고, 해당 user id(user.id)와 현재 로그인된
+사용자의 id(currentUser.id)가 일치하는 경우에만 edit 버튼을
+보여줍니다.
+      -->
     </div>
   </body>
 </html>
