@@ -35,6 +35,12 @@
         </form>
       </div>
 
+      <div>
+        <% if(isAuthenticated && currentUser.id == user.id){ %> <!-- 1 -->
+          <a class="btn btn-primary" href="/users/<%= user.username %>/edit">Edit</a>
+        <% } %>
+      </div>
+
     </div>
   </body>
 </html>
