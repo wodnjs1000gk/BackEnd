@@ -52,6 +52,12 @@ router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
   var errors = req.flash('errors')[0] || {};
   res.render('posts/new', { post:post, errors:errors });
 });
+/*
+new, create, edit, update, destroy route에 util.isLoggedin를
+사용해서 로그인이 된 경우에만 해당 route을 사용할 수 있습니다.
+즉 게시물 목록(index)을 보는 것과, 게시물 본문을 보는 것(show)
+외의 행동은 login이 되어야만 할 수 있습니다.
+*/
 
 // create
 router.post('/', util.isLoggedin, function(req, res){
@@ -67,6 +73,11 @@ router.post('/', util.isLoggedin, function(req, res){
     res.redirect('/posts');
   });
 });
+/*
+edit, update, destroy route에 checkPermission를 사용해서
+본인이 작성한 post인 경우에만 계속 해당 route을 사용할 수
+있습니다.
+*/
 
 // show
 router.get('/:id', function(req, res){
@@ -125,7 +136,7 @@ router.delete('/:id', util.isLoggedin, checkPermission, function(req, res){
 
 module.exports = router;
 
-// private functions // 1
+// private functions
 function checkPermission(req, res, next){
   Post.findOne({_id:req.params.id}, function(err, post){
     if(err) return res.json(err);
@@ -134,3 +145,9 @@ function checkPermission(req, res, next){
     next();
   });
 }
+/*
+Post에서checkPermission함수는 해당 게시물에 기록된 author와
+로그인된 user.id를 비교해서 같은 경우에만 계속 진행(next())하고,
+만약 다르다면 util.noPermission함수를 호출하여 login 화면으로
+돌려보냅니다.
+*/
