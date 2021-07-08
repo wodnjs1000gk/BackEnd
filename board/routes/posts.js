@@ -6,21 +6,23 @@ var Post = require('../models/Post');
 var util = require('../util');
 // 게시판 - User Error 처리에서 변경된 것과 동일하게 변경되었습니다.
 
-// Index
+/*
+// Index ~ normal board
 router.get('/', function(req, res){
   Post.find({})
   .populate('author')
-  /*
-Model.populate()함수는 relationship이 형성되어 있는 항목의 값을 생성해 줍니다.
-현재 post의 author에는 user의 id가 기록되어 있는데,
-이 값을 바탕으로 실제 user의 값을 author에 생성하게 됩니다.
-  */
   .sort('-createdAt')
   .exec(function(err, posts){
     if(err) return res.json(err);
     res.render('posts/index', {posts:posts});
   });
 });
+*/
+/*
+Model.populate()함수는 relationship이 형성되어 있는 항목의 값을 생성해 줍니다.
+현재 post의 author에는 user의 id가 기록되어 있는데,
+이 값을 바탕으로 실제 user의 값을 author에 생성하게 됩니다.
+*/
 /*
 find와 function 사이에 sort함수가 들어간 형태.
 나중에 생성된 data가 위로 오도록 정렬.
@@ -45,6 +47,31 @@ exec안의 함수에서 해당 data를 받아와서 할일을 정하는 구조
 두가지 이상으로 정렬하는 경우 빈칸을 넣고 각각의 항목을 적어주면 됨.
 object를 넣는 경우 {createdAt:1}(오름차순), {createdAt:-1}(내림차순)
 */
+
+// Index
+router.get('/', async function(req, res){
+  var page = Math.max(1, parseInt(req.query.page));
+  var limit = Math.max(1, parseInt(req.query.limit));
+  page = !isNaN(page)?page:1;
+  limit = !isNaN(limit)?limit:10;
+
+  var skip = (page-1)*limit;
+  var count = await Post.countDocuments({});
+  var maxPage = Math.ceil(count/limit);
+  var posts = await Post.find({})
+    .populate('author')
+    .sort('-createdAt')
+    .skip(skip)
+    .limit(limit)
+    .exec();
+
+  res.render('posts/index', {
+    posts:posts,
+    currentPage:page,
+    maxPage:maxPage,
+    limit:limit
+  });
+});
 
 // New
 router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
