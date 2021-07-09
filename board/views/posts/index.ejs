@@ -69,6 +69,11 @@ ejs에서 바로 사용할 수 있습니다.
 
       <div class="row mb-3">
         <div class="col-2">
+          <!--
+New 버튼을 pagination과 같은 줄에 놓기 위해 Bootstrap grid
+(https://getbootstrap.com/docs/4.1/layout/grid) css (row, col-?)를
+사용하였습니다.
+          -->
           <% if(isAuthenticated){ %>
             <a class="btn btn-primary" href="/posts/new">New</a>
           <% } %>
@@ -79,6 +84,14 @@ ejs에서 바로 사용할 수 있습니다.
             var previousBtnEnabled = currentPage>1;
             var nextBtnEnabled = currentPage<maxPage;
           %>
+          <!--
+          pagination에 사용될 변수들입니다.
+- offset: 현재페이지 좌우로 몇개의 페이지들을 보여줄지를 정하는 변수입니다.
+- previousBtnEnabled: 이전 페이지 버튼은 현재페이지가 1보다 큰 경우에만
+활성화됩니다.
+- nextBtnEnabled: 다음 페이지 버튼은 현재페이지가 마지막페이지(maxPage)보다
+작은 경우에만 활성화됩니다.
+          -->
           <ul class="pagination pagination-sm justify-content-center align-items-center h-100 mb-0">
             <li class="page-item <%= previousBtnEnabled?'':'disabled' %>">
               <a class="page-link" href="/posts?page=<%= currentPage-1 %>&limit=<%= limit %>" <%= previousBtnEnabled?'':'tabindex=-1' %>>&laquo;</a>

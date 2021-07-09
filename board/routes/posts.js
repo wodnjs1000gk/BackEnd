@@ -50,19 +50,59 @@ object를 넣는 경우 {createdAt:1}(오름차순), {createdAt:-1}(내림차순
 
 // Index
 router.get('/', async function(req, res){
+  /*
+async 키워드가 function 키워드 앞에 추가되었습니다. 이 함수안에는 await
+키워드를 사용하는데, await 키워드를 사용하는 함수는 반드시 async 키워드를
+function 키워드 앞에 붙여야 합니다. await 키워드가 하는 일은 5번에서 설명합니다.
+  */
   var page = Math.max(1, parseInt(req.query.page));
   var limit = Math.max(1, parseInt(req.query.limit));
+  /*
+  Query string으로 전달받은 page, limit을 req.query를 통해 읽어옵니다.
+  parseInt함수를 사용한 이유: Query string은 문자열로 전달되기 때문에
+  숫자가 아닐 수도 있고, 정수(소수점이 없음)를 읽어내기 위해 사용했습니다.
+  Math.max함수를 사용한 이유: page, limit은 양수여야 하고
+  최소 1이 되어야 합니다.
+  */
   page = !isNaN(page)?page:1;
   limit = !isNaN(limit)?limit:10;
+  /*
+  만약 정수로 변환될 수 없는 값이 page, limit에 오는 경우 기본값을 설정해 줍니다.
+  이 값은 해당 query string이 없는 경우에도 사용됩니다.
+  */
 
   var skip = (page-1)*limit;
+  /*
+skip은 무시할 게시물의 수를 담는 변수입니다. 페이지당 10개의 게시물이 있고,
+현재 3번째 페이지를 만들려면, DB에서 처음 20개의 게시물을 무시하고 21번째부터
+10개의 게시물을 보여주는 것이죠.
+  */
   var count = await Post.countDocuments({});
+  /*
+Promise 앞에 await키워드를 사용하면, 해당 Promise가 완료될 때까지 다음 코드로
+진행하지 않고 기다렸다가 해당 Promise가 완료되면 resolve된 값을
+반환(return)합니다. Post.countDocuments({}) 함수를 사용해서 {}에
+해당하는({} == 조건이 없음, 즉 모든) post의 수를 DB에서 읽어 온 후 count변수에
+담았습니다.
+  */
   var maxPage = Math.ceil(count/limit);
+  /*
+전체 게시물 수(count)를 알고, 한페이지당 표시되야 할 게시물의 수(limit)을 알면,
+전체 페이지 수를 계산할 수 있습니다. 이 값을 maxPage변수에 담습니다.
+  */
   var posts = await Post.find({})
+  /*
+기존의 Post.find({})도 await를 사용하여 검색된 posts를 바로 변수에
+담을 수 있게 하였습니다.
+  */
     .populate('author')
     .sort('-createdAt')
     .skip(skip)
     .limit(limit)
+    /*
+skip함수는 일정한 수만큼 검색된 결과를 무시하는 함수,
+limit함수는 일정한 수만큼만 검색된 결과를 보여주는 함수입니다.
+    */
     .exec();
 
   res.render('posts/index', {
@@ -71,6 +111,10 @@ router.get('/', async function(req, res){
     maxPage:maxPage,
     limit:limit
   });
+  /*
+현재 페이지 번호(currentPage), 마지막 페이지번호(maxPage), 페이지당
+보여줄 게시물 수(limit)은 view로 전달하여 view에서 사용할 수 있게 합니다.
+  */
 });
 
 // New
