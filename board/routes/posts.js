@@ -139,9 +139,9 @@ router.post('/', util.isLoggedin, function(req, res){
     if(err){
       req.flash('post', req.body);
       req.flash('errors', util.parseError(err));
-      return res.redirect('/posts/new');
+      return res.redirect('/posts/new'+res.locals.getPostQueryString());
     }
-    res.redirect('/posts');
+    res.redirect('/posts'+res.locals.getPostQueryString(false, {page:1}));
   });
 });
 /*
@@ -184,16 +184,16 @@ router.put('/:id', util.isLoggedin, checkPermission, function(req, res){
     if(err){
       req.flash('post', req.body);
       req.flash('errors', util.parseError(err));
-      return res.redirect('/posts/'+req.params.id+'/edit');
-    }
-    /*
+      /*
 board08 - Post Error에서 Post.findOneAndUpdate에
 {runValidators:true}이 추가되었습니다..
 findOneAndUpdate는 기본설정이 schema에 있는 validation을
 작동하지 않도록 되어 있기때문에 이 option을 통해서
 validation이 작동하도록 설정해 주어야 합니다.
     */
-    res.redirect('/posts/'+req.params.id);
+    return res.redirect('/posts/'+req.params.id+'/edit'+res.locals.getPostQueryString()); // 1
+  }
+  res.redirect('/posts/'+req.params.id+res.locals.getPostQueryString());
   });
 });
 
@@ -201,7 +201,7 @@ validation이 작동하도록 설정해 주어야 합니다.
 router.delete('/:id', util.isLoggedin, checkPermission, function(req, res){
   Post.deleteOne({_id:req.params.id}, function(err){
     if(err) return res.json(err);
-    res.redirect('/posts');
+  res.redirect('/posts'+res.locals.getPostQueryString());
   });
 });
 

@@ -59,4 +59,22 @@ isLoggedin과 다르게 접근권한이 있는지 없는지를 판단하지는 �
 상황에 따라서 판단 방법이 다르기 때문입니다.
 */
 
+util.getPostQueryString = function(req, res, next){
+  res.locals.getPostQueryString = function(isAppended=false, overwrites={}){
+    var queryString = '';
+    var queryArray = [];
+    var page = overwrites.page?overwrites.page:(req.query.page?req.query.page:'');
+    var limit = overwrites.limit?overwrites.limit:(req.query.limit?req.query.limit:'');
+
+    if(page) queryArray.push('page='+page);
+    if(limit) queryArray.push('limit='+limit);
+
+    if(queryArray.length>0) queryString = (isAppended?'&':'?') + queryArray.join('&');
+
+    return queryString;
+  };
+  next();
+};
+
+
 module.exports = util;
