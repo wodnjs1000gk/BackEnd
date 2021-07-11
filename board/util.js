@@ -75,6 +75,22 @@ util.getPostQueryString = function(req, res, next){
   };
   next();
 };
+/*
+util.getPostQueryString함수는 res.locals에 getPostQueryString함수를 추가하는
+middleware입니다. 이렇게 res.locals에 추가된 변수나 함수는 view에서 바로 사용할
+수 있고, res.locals.getPostQueryString의 형식으로 route에서도 사용할 수 있게 됩니다.
 
+res.locals.getPostQueryString함수의 기본역할은 req.query로 전달 받은 query에서
+page, limit을 추출하여 다시 한줄의 문자열로 만들어 반환하는 것입니다.
+
+2개의 파라메터를 optional로 받는데, 첫번째로 파라메터는 생성할 query string이
+기존의 query string에 추가되는(appended) query인지 아닌지를 boolean으로 받습니다.
+만약 추가되는 query라면 '&'로 시작하고, 아니라면 '?'로 시작하는 query string을
+만듭니다.
+
+두번째 파라메터는 req.query의 page나 limit을 overwrite하는 파라메터입니다.
+예를들어 req.query.page의 값를 무시하고 page를 무조건 1로 하는 query를 만들고
+싶다면 {page:1}을 전달하면 됩니다.
+*/
 
 module.exports = util;

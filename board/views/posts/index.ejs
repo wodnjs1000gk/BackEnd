@@ -31,6 +31,12 @@
             <tr>
               <td>
                 <a href="/posts/<%= post._id %><%= getPostQueryString() %>"><div class="ellipsis"><%= post.title %></div></a>
+                <!--
+게시판에서 게시물 제목을 눌러 show route으로 가는 경우 page, limit query
+string을 전달해 줍니다. view에서는 res.locals의 항목들을 바로 사용할 수
+있기때문에 res.locals.getPostQueryString가 아니라 getPostQueryString로
+호출합니다.
+                -->
               </td>
               <td class="author"> <!-- 2 -->
                 <div class="ellipsis"><%= post.author ? post.author.username : "" %></div>

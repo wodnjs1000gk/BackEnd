@@ -143,6 +143,20 @@ router.post('/', util.isLoggedin, function(req, res){
     }
     res.redirect('/posts'+res.locals.getPostQueryString(false, {page:1}));
   });
+  /*
+  post의 routes에서 redirect가 있는 경우 res.locals.getPostQueryString함수를
+  사용하여 query string을 계속 유지하도록 합니다. 물론 해당 route로 page,
+  limit query string들이 전달되어야 합니다. 이 부분은 view에서 설정해줘야 합니다.
+
+  여기서 생성되는 query string은 기존의 query string에 추가되는 게 아니고
+  (isAppended = false), 값을 overwrite하지도 않으므로 파라메터 전달 없이
+  res.locals.getPostQueryString()로 호출합니다.
+
+  새 글을 작성한 후에는 무조건 첫번째 page를 보여주도록 page query를 1로
+  overwrite해줍니다. overwrite은 res.locals.getPostQueryString함수의
+  두번째 파라메터이죠. 첫번째 파라메터는 optional이지만 첫번째 파라메터없이
+  두번째 파라메터를 전달할 수 없으므로, (false, {page:1})를 사용합니다.
+  */
 });
 /*
 edit, update, destroy route에 checkPermission를 사용해서
