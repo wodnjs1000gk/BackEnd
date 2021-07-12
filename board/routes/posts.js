@@ -71,13 +71,18 @@ function 키워드 앞에 붙여야 합니다. await 키워드가 하는 일은 
   이 값은 해당 query string이 없는 경우에도 사용됩니다.
   */
 
+  var searchQuery = createSearchQuery(req.query);
+  /*
+
+  */
+
   var skip = (page-1)*limit;
   /*
 skip은 무시할 게시물의 수를 담는 변수입니다. 페이지당 10개의 게시물이 있고,
 현재 3번째 페이지를 만들려면, DB에서 처음 20개의 게시물을 무시하고 21번째부터
 10개의 게시물을 보여주는 것이죠.
   */
-  var count = await Post.countDocuments({});
+  var count = await Post.countDocuments(searchQuery);
   /*
 Promise 앞에 await키워드를 사용하면, 해당 Promise가 완료될 때까지 다음 코드로
 진행하지 않고 기다렸다가 해당 Promise가 완료되면 resolve된 값을
@@ -90,7 +95,7 @@ Promise 앞에 await키워드를 사용하면, 해당 Promise가 완료될 때�
 전체 게시물 수(count)를 알고, 한페이지당 표시되야 할 게시물의 수(limit)을 알면,
 전체 페이지 수를 계산할 수 있습니다. 이 값을 maxPage변수에 담습니다.
   */
-  var posts = await Post.find({})
+  var posts = await Post.find(searchQuery)
   /*
 기존의 Post.find({})도 await를 사용하여 검색된 posts를 바로 변수에
 담을 수 있게 하였습니다.
@@ -109,7 +114,9 @@ limit함수는 일정한 수만큼만 검색된 결과를 보여주는 함수입
     posts:posts,
     currentPage:page,
     maxPage:maxPage,
-    limit:limit
+    limit:limit,
+    searchType:req.query.searchType,
+    searchText:req.query.searchText
   });
   /*
 현재 페이지 번호(currentPage), 마지막 페이지번호(maxPage), 페이지당
@@ -141,7 +148,7 @@ router.post('/', util.isLoggedin, function(req, res){
       req.flash('errors', util.parseError(err));
       return res.redirect('/posts/new'+res.locals.getPostQueryString());
     }
-    res.redirect('/posts'+res.locals.getPostQueryString(false, {page:1}));
+    res.redirect('/posts'+res.locals.getPostQueryString(false, { page:1, searchText:'' }));
   });
   /*
   post의 routes에서 redirect가 있는 경우 res.locals.getPostQueryString함수를
@@ -236,3 +243,19 @@ Post에서checkPermission함수는 해당 게시물에 기록된 author와
 만약 다르다면 util.noPermission함수를 호출하여 login 화면으로
 돌려보냅니다.
 */
+
+function createSearchQuery(queries){
+  var searchQuery = {};
+  if(queries.searchType && queries.searchText && queries.searchText.length >= 3){
+    var searchTypes = queries.searchType.toLowerCase().split(',');
+    var postQueries = [];
+    if(searchTypes.indexOf('title')>=0){
+      postQueries.push({ title: { $regex: new RegExp(queries.searchText, 'i') } });
+    }
+    if(searchTypes.indexOf('body')>=0){
+      postQueries.push({ body: { $regex: new RegExp(queries.searchText, 'i') } });
+    }
+    if(postQueries.length > 0) searchQuery = {$or:postQueries};
+  }
+  return searchQuery;
+}
