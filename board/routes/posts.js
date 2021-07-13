@@ -73,7 +73,15 @@ function 키워드 앞에 붙여야 합니다. await 키워드가 하는 일은 
 
   var searchQuery = createSearchQuery(req.query);
   /*
-
+실제 게시물 검색은 Post.find(검색_쿼리_오브젝트)에
+어떤 검색_쿼리_오브젝트가 들어가는지에 따라 결정됩니다.
+{title:"test title"}이라는 object가 들어가면 title이 정확히
+"test title"인 게시물이 검색되고, {body:"test body"}라는
+object가 들어가면 body가 정확히 "test body"인 게시물이
+검색됩니다. 이처럼 검색기능에서는 검색_쿼리_오브젝트를 만드는
+것이 중요한데, 이것을 만들기 위해 createSearchQuery함수를
+만들고 이 함수를 통해 생성된 검색_쿼리_오브젝트를 searchQuery
+변수에 담았습니다.
   */
 
   var skip = (page-1)*limit;
@@ -117,6 +125,10 @@ limit함수는 일정한 수만큼만 검색된 결과를 보여주는 함수입
     limit:limit,
     searchType:req.query.searchType,
     searchText:req.query.searchText
+    /*
+view에서 검색 form에 현재 검색에 사용한 검색타입과 검색어를
+보여줄 수 있게 해당 데이터를 view에 보냅니다.
+    */
   });
   /*
 현재 페이지 번호(currentPage), 마지막 페이지번호(maxPage), 페이지당
@@ -149,6 +161,9 @@ router.post('/', util.isLoggedin, function(req, res){
       return res.redirect('/posts/new'+res.locals.getPostQueryString());
     }
     res.redirect('/posts'+res.locals.getPostQueryString(false, { page:1, searchText:'' }));
+    /*
+새 글을 작성하면 검색 결과를 query string에서 제거하여 전체 게시물이 보이도록 합니다.
+    */
   });
   /*
   post의 routes에서 redirect가 있는 경우 res.locals.getPostQueryString함수를
@@ -247,15 +262,33 @@ Post에서checkPermission함수는 해당 게시물에 기록된 author와
 function createSearchQuery(queries){
   var searchQuery = {};
   if(queries.searchType && queries.searchText && queries.searchText.length >= 3){
+    /*
+query에 searchType, searchText가 존재하고, searchText가 3글자
+이상인 경우에만 search query를 만들고, 이외의 경우에는 {}를
+전달하여 모든 게시물이 검색되도록 합니다.
+    */
     var searchTypes = queries.searchType.toLowerCase().split(',');
     var postQueries = [];
     if(searchTypes.indexOf('title')>=0){
       postQueries.push({ title: { $regex: new RegExp(queries.searchText, 'i') } });
+      /*
+{$regex: Regex_오브젝트 }를 사용해서 regex 검색을 할 수 있습니다. 'i'는 대소
+문자를 구별하지 않는다는 regex의 옵션입니다.
+$regex query의 정확한 사용법은
+https://docs.mongodb.com/manual/reference/operator/query/regex
+에서 볼 수 있습니다
+      */
     }
     if(searchTypes.indexOf('body')>=0){
       postQueries.push({ body: { $regex: new RegExp(queries.searchText, 'i') } });
     }
     if(postQueries.length > 0) searchQuery = {$or:postQueries};
+    /*
+{$or: 검색_쿼리_오브젝트_배열 }을 사용해서 or 검색을 할 수 있습니다.
+$or query의 정확한 사용법은
+https://docs.mongodb.com/manual/reference/operator/query/or
+에서 볼 수 있고 $and, $nor, $not query도 함께 공부해둡시다.
+    */
   }
   return searchQuery;
 }

@@ -110,8 +110,8 @@ util.getPostQueryString = function(req, res, next){
     if(queryArray.length>0) queryString = (isAppended?'&':'?') + queryArray.join('&');
 
     return queryString;
-  }
+  };
   next();
-}
+};
 
 module.exports = util;
