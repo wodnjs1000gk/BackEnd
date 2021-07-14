@@ -3,6 +3,7 @@
 var express  = require('express');
 var router = express.Router();
 var Post = require('../models/Post');
+var User = require('../models/User');
 var util = require('../util');
 // 게시판 - User Error 처리에서 변경된 것과 동일하게 변경되었습니다.
 
@@ -71,7 +72,7 @@ function 키워드 앞에 붙여야 합니다. await 키워드가 하는 일은 
   이 값은 해당 query string이 없는 경우에도 사용됩니다.
   */
 
-  var searchQuery = createSearchQuery(req.query);
+//  var searchQuery = createSearchQuery(req.query);
   /*
 실제 게시물 검색은 Post.find(검색_쿼리_오브젝트)에
 어떤 검색_쿼리_오브젝트가 들어가는지에 따라 결정됩니다.
@@ -90,7 +91,7 @@ skip은 무시할 게시물의 수를 담는 변수입니다. 페이지당 10개
 현재 3번째 페이지를 만들려면, DB에서 처음 20개의 게시물을 무시하고 21번째부터
 10개의 게시물을 보여주는 것이죠.
   */
-  var count = await Post.countDocuments(searchQuery);
+//  var count = await Post.countDocuments(searchQuery);
   /*
 Promise 앞에 await키워드를 사용하면, 해당 Promise가 완료될 때까지 다음 코드로
 진행하지 않고 기다렸다가 해당 Promise가 완료되면 resolve된 값을
@@ -98,25 +99,42 @@ Promise 앞에 await키워드를 사용하면, 해당 Promise가 완료될 때�
 해당하는({} == 조건이 없음, 즉 모든) post의 수를 DB에서 읽어 온 후 count변수에
 담았습니다.
   */
-  var maxPage = Math.ceil(count/limit);
+//  var maxPage = Math.ceil(count/limit);
   /*
 전체 게시물 수(count)를 알고, 한페이지당 표시되야 할 게시물의 수(limit)을 알면,
 전체 페이지 수를 계산할 수 있습니다. 이 값을 maxPage변수에 담습니다.
   */
-  var posts = await Post.find(searchQuery)
   /*
-기존의 Post.find({})도 await를 사용하여 검색된 posts를 바로 변수에
-담을 수 있게 하였습니다.
-  */
+  var posts = await Post.find(searchQuery)
     .populate('author')
     .sort('-createdAt')
     .skip(skip)
     .limit(limit)
+    .exec();
+    */
+    /*
+  기존의 Post.find({})도 await를 사용하여 검색된 posts를 바로 변수에
+  담을 수 있게 하였습니다.
+    */
     /*
 skip함수는 일정한 수만큼 검색된 결과를 무시하는 함수,
 limit함수는 일정한 수만큼만 검색된 결과를 보여주는 함수입니다.
     */
-    .exec();
+
+    var maxPage = 0;
+    var searchQuery = await createSearchQuery(req.query);
+    var posts = [];
+
+    if(searchQuery) {
+      var count = await Post.countDocuments(searchQuery);
+      maxPage = Math.ceil(count/limit);
+      posts = await Post.find(searchQuery)
+        .populate('author')
+        .sort('-createdAt')
+        .skip(skip)
+        .limit(limit)
+        .exec();
+    }
 
   res.render('posts/index', {
     posts:posts,
@@ -259,7 +277,7 @@ Post에서checkPermission함수는 해당 게시물에 기록된 author와
 돌려보냅니다.
 */
 
-function createSearchQuery(queries){
+async function createSearchQuery(queries){
   var searchQuery = {};
   if(queries.searchType && queries.searchText && queries.searchText.length >= 3){
     /*
@@ -282,6 +300,18 @@ https://docs.mongodb.com/manual/reference/operator/query/regex
     if(searchTypes.indexOf('body')>=0){
       postQueries.push({ body: { $regex: new RegExp(queries.searchText, 'i') } });
     }
+    if(searchTypes.indexOf('author!')>=0){
+      var user = await User.findOne({ username: queries.searchText }).exec();
+      if(user) postQueries.push({author:user._id});
+    }
+    else if(searchTypes.indexOf('author')>=0){
+      var users = await User.find({ username: { $regex: new RegExp(queries.searchText, 'i') } }).exec();
+      var userIds = [];
+      for(var user of users){
+        userIds.push(user._id);
+      }
+      if(userIds.length>0) postQueries.push({author:{$in:userIds}});
+    }
     if(postQueries.length > 0) searchQuery = {$or:postQueries};
     /*
 {$or: 검색_쿼리_오브젝트_배열 }을 사용해서 or 검색을 할 수 있습니다.
@@ -289,6 +319,7 @@ $or query의 정확한 사용법은
 https://docs.mongodb.com/manual/reference/operator/query/or
 에서 볼 수 있고 $and, $nor, $not query도 함께 공부해둡시다.
     */
+     else searchQuery = null;
   }
   return searchQuery;
 }

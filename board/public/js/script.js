@@ -64,3 +64,36 @@ convertDateTime함수는 data-date-time을 찾아서
 서버가 해외에 있는 경우 시간이 해당 지역의 시간대로 변경되는 문제가 있어서
 client에서 변환하는 것으로 변경하였습니다.
 */
+
+$(function(){
+  var search = window.location.search;
+  var params = {};
+
+  if(search){
+    $.each(search.slice(1).split('&'),function(index,param){
+      var index = param.indexOf('=');
+      if(index>0){
+        var key = param.slice(0,index);
+        var value = param.slice(index+1);
+
+        if(!params[key]) params[key] = value;
+      }
+    });
+  }
+
+  if(params.searchText && params.searchText.length>=3){
+    $('[data-search-highlight]').each(function(index,element){
+      var $element = $(element);
+      var searchHighlight = $element.data('search-highlight');
+      var index = params.searchType.indexOf(searchHighlight);
+
+      if(index>=0){
+        var decodedSearchText = params.searchText.replace(/\+/g, ' ');
+        decodedSearchText = decodeURI(decodedSearchText);
+
+        var regex = new RegExp(`(${decodedSearchText})`,'ig');
+        $element.html($element.html().replace(regex,'<span class="highlighted">$1</span>'));
+      }
+    });
+  }
+});

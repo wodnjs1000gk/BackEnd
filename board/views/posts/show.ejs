@@ -17,7 +17,7 @@
       </nav>
 
       <div class="card">
-        <h5 class="card-header p-2"><%= post.title %></h5>
+        <h5 class="card-header p-2" data-search-highlight="title"><%= post.title %></h5>
         <div class="row">
 <!--
 bootstrap의 row, col-? class를 사용해서 html element 안의 공간을
@@ -31,13 +31,13 @@ col-sm-?, col-md-?와 같이 사이즈를 지정해주면,
 자세한 설명은 https://getbootstrap.com/docs/4.4/layout/grid 에서 읽어주세요.
 -->
           <div class="col-md-7 col-lg-8 col-xl-9 order-sm-2 order-md-1">
-            <div class="post-body p-2"><%= post.body %></div>
+            <div class="post-body p-2" data-search-highlight="body"><%= post.body %></div>
           </div>
 
           <div class="col-md-5 col-lg-4 col-xl-3 order-sm-1 order-md-2">
             <div class="post-info card m-2 p-2">
               <div class="border-bottom pb-1 mb-1">
-                <span>Author</span> : <%= post.author ? post.author.username : "" %>
+                <span>Author</span> : <span data-search-highlight="author"><%= post.author ? post.author.username : "" %></span>
               </div>
               <!-- index와 마찬가지로 show에도 author 항목을 추가하고
               author가 있는 경우 author의 username을 표시합니다. -->
