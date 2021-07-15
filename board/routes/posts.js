@@ -278,6 +278,9 @@ Post에서checkPermission함수는 해당 게시물에 기록된 author와
 */
 
 async function createSearchQuery(queries){
+  /*
+createSearchQuery함수 안에서 user모델을 검색하기 때문에 async 함수가 되었습니다.
+  */
   var searchQuery = {};
   if(queries.searchType && queries.searchText && queries.searchText.length >= 3){
     /*
@@ -301,6 +304,9 @@ https://docs.mongodb.com/manual/reference/operator/query/regex
       postQueries.push({ body: { $regex: new RegExp(queries.searchText, 'i') } });
     }
     if(searchTypes.indexOf('author!')>=0){
+    /*
+searchType이 author!인경우, searchText가 username과 일치하는 user 한명을 찾아 검색 쿼리에 추가합니다.
+    */
       var user = await User.findOne({ username: queries.searchText }).exec();
       if(user) postQueries.push({author:user._id});
     }
@@ -312,6 +318,13 @@ https://docs.mongodb.com/manual/reference/operator/query/regex
       }
       if(userIds.length>0) postQueries.push({author:{$in:userIds}});
     }
+    /*
+searchType이 author인 경우에는 regex를 사용해 searchText가 username에 일부분인
+user를 모두 찾아 개별적으로 $in operator
+(https://docs.mongodb.com/manual/reference/operator/query/in)를
+사용하여 검색 쿼리를 만듭니다. 즉 author가 userIds 안(in)에 포함된 경우를 찾는
+쿼리입니다.
+    */
     if(postQueries.length > 0) searchQuery = {$or:postQueries};
     /*
 {$or: 검색_쿼리_오브젝트_배열 }을 사용해서 or 검색을 할 수 있습니다.
@@ -319,7 +332,18 @@ $or query의 정확한 사용법은
 https://docs.mongodb.com/manual/reference/operator/query/or
 에서 볼 수 있고 $and, $nor, $not query도 함께 공부해둡시다.
     */
+    /*
+작성자 검색의 경우, 해당 user가 검색된 경우에만 postQueries에 조건이 추가됩니다.
+만약 검색 조건과 맞는 user가 하나도 존재하지 않는다면, 게시물 검색결과는
+없어야 합니다. 이를 판별하기 위해 검색 조건에 맞는 작성자가 존재하지 않는 경우,
+searchQuery에 null을 넣었습니다.
+    */
      else searchQuery = null;
+     /*
+2-3에서 설명한 것 처럼, 작성자의 검색결과가 없다면 post를 검색할 필요가 없습니다.
+이것을 위해 Post.countDocuments, Post.find 및 관련 코드들을 searchQuery가
+존재하는 경우에만 실행하도록 코드를 약간 수정하였습니다.
+     */
   }
   return searchQuery;
 }

@@ -67,6 +67,10 @@ client에서 변환하는 것으로 변경하였습니다.
 
 $(function(){
   var search = window.location.search;
+  /*
+window.location.search에 query string의 정보가 들어 있습니다.
+?searchType=title&searchText=text의 형태입니다.
+  */
   var params = {};
 
   if(search){
@@ -80,8 +84,19 @@ $(function(){
       }
     });
   }
+  /*
+1번을 분석해서 query string을 오브젝트로 바꿔줍니다.
+사실 Chrome, Safari같은 브라우저를 사용한다면 이 부분을 직접 코딩할 필요 없이
+URLSearchParams(https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams)를
+사용할수 있습니다만, IE에서 불가능하기 때문에
+이와 비슷한 기능을 직접 코딩을 했습니다.
+  */
 
   if(params.searchText && params.searchText.length>=3){
+    /*
+data-search-highlight의 값을 searchType과 비교하여, 일치하는 경우 searchText를
+regex로 찾아 해당 텍스트에 highlighted css class를 추가하는 코드입니다.
+    */
     $('[data-search-highlight]').each(function(index,element){
       var $element = $(element);
       var searchHighlight = $element.data('search-highlight');
