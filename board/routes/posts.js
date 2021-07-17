@@ -4,6 +4,7 @@ var express  = require('express');
 var router = express.Router();
 var Post = require('../models/Post');
 var User = require('../models/User');
+var Comment = require('../models/Comment');
 var util = require('../util');
 // 게시판 - User Error 처리에서 변경된 것과 동일하게 변경되었습니다.
 
@@ -205,12 +206,20 @@ edit, update, destroy route에 checkPermission를 사용해서
 */
 
 // show
-router.get('/:id', function(req, res){
-  Post.findOne({_id:req.params.id})
-    .populate('author')
-    .exec(function(err, post){
-      if(err) return res.json(err);
-      res.render('posts/show', {post:post});
+router.get('/:id', function(req, res){ // 2
+  var commentForm = req.flash('commentForm')[0] || {_id: null, form: {}};
+  var commentError = req.flash('commentError')[0] || { _id:null, parentComment: null, errors:{}};
+
+  Promise.all([
+      Post.findOne({_id:req.params.id}).populate({ path: 'author', select: 'username' }),
+      Comment.find({post:req.params.id}).sort('createdAt').populate({ path: 'author', select: 'username' })
+    ])
+    .then(([post, comments]) => {
+      res.render('posts/show', { post:post, comments:comments, commentForm:commentForm, commentError:commentError});
+    })
+    .catch((err) => {
+      console.log('err: ', err);
+      return res.json(err);
     });
 });
 // index와 마찬가지로 show에도 .populate()함수를 추가하였습니다.
