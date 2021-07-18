@@ -108,6 +108,23 @@ edit, delete 버튼을 보여줍니다. currentUser 역시 req.locals에
           <% }) %>
         </div>
       <% } %>
+      <!-->
+DB에서 찾아진 댓글들을 표시하는 부분입니다.
+<% if(comments.length){ %>
+댓글이 존재하면(댓글배열의 길이가 존재하는 경우),
+
+<% comments.forEach(function(comment) { %>
+각각 댓글을 하나씩 돌면서
+
+<div class="col-3 col-md-2 col-lg-1 pl-4"><%= comment.author.username %></div>
+작성자,
+
+<div class="comment-text mb-3"><%= comment.text %></div>
+댓글 텍스트,
+
+(Created: <span data-date-time="<%= comment.createdAt %>"></span>)
+댓글 생성시간을 표시합니다.
+      <-->
 
       <div class="mt-3">
         <form action="/comments?postId=<%= post._id %><%= getPostQueryString(true) %>" method="post">

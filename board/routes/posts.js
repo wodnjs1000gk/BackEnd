@@ -206,7 +206,26 @@ edit, update, destroy route에 checkPermission를 사용해서
 */
 
 // show
-router.get('/:id', function(req, res){ // 2
+router.get('/:id', function(req, res){
+  /*
+댓글은 게시물(post)과 함께 post의 show 페이지에 표시됩니다.
+즉 post의 show route은 하나의 게시물과 해당 게시물의 모든 댓글들을 DB에서
+모두 읽어온 후 페이지를 만들어야(render)합니다.
+DB에서 두개 이상의 데이터를 가져와야 하는 경우 Promise.all 함수를
+사용할 수 있습니다.
+  */
+  /*
+  Promise.all 함수는 Promise 배열을 인자로 받고, 전달 받은 모든 Promise들이
+  resolve될 때까지 기다렸다가 resolve된 데이터들를 같은 순서의 배열로 만들어
+  다음 callback으로 전달합니다.
+
+  post 하나(findOne)와 해당 post에 관련된 comment들 전부(find)를 찾아서
+  'posts/show' view를 render합니다.
+
+  위에서 설명한 것처럼 Promise.all 함수에 전달되는 배열의 순서
+  ([ Post.findOne(...), Comment.find(...) ])와 then 함수에서 사용되는
+  callback함수에 전달되는 배열의 순서([ post, comments ])가 일치하도록 합시다.
+  */
   var commentForm = req.flash('commentForm')[0] || {_id: null, form: {}};
   var commentError = req.flash('commentError')[0] || { _id:null, parentComment: null, errors:{}};
 
