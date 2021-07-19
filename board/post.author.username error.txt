@@ -1,0 +1,27 @@
+TypeError: C:\workspace\BackEnd\board\views\posts\index.ejs:48
+    46|               <!-- table의 tbody에 author 항목을 추가하고
+
+    47|               author가 있는 경우 author의 username을 표시합니다. -->
+
+ >> 48|                 <a href="/posts<%= getPostQueryString(false, { searchType:'author!', searchText:post.author.username }) %>">
+
+    49|                   <div data-search-highlight="author" class="ellipsis"><%= post.author ? post.author.username : "" %></div>
+
+    50|                 </a>
+
+    51|               <td class="date">
+
+
+Cannot read property 'username' of undefined
+    at eval (eval at compile (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:662:12), <anonymous>:43:99)
+    at Array.forEach (<anonymous>)
+    at eval (eval at compile (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:662:12), <anonymous>:24:14)
+    at index (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:692:17)
+    at tryHandleCache (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:272:36)
+    at View.exports.renderFile [as engine] (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:489:10)
+    at View.render (C:\workspace\BackEnd\board\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\workspace\BackEnd\board\node_modules\express\lib\application.js:640:10)
+    at Function.render (C:\workspace\BackEnd\board\node_modules\express\lib\application.js:592:3)
+    at ServerResponse.render (C:\workspace\BackEnd\board\node_modules\express\lib\response.js:1012:7)
+    at C:\workspace\BackEnd\board\routes\posts.js:140:7
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)
