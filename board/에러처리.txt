@@ -1,3 +1,14 @@
+2021-07-20
+
+증상 1 :
+http://localhost:3000/users/new 에서 새로운 계정을 생성하면 Get을 가져오지 못함
+
+증상 2 :
+https://localhost:3000/board 에 접속시 다음의 에러 로그 발생
+
+증상 3 :
+http://localhost:3000/login 에서 로그인 실행 시 다음의 에러 로그 발생
+
 TypeError: C:\workspace\BackEnd\board\views\posts\index.ejs:48
     46|               <!-- table의 tbody에 author 항목을 추가하고
 
@@ -25,3 +36,19 @@ Cannot read property 'username' of undefined
     at ServerResponse.render (C:\workspace\BackEnd\board\node_modules\express\lib\response.js:1012:7)
     at C:\workspace\BackEnd\board\routes\posts.js:140:7
     at processTicksAndRejections (internal/process/task_queues.js:95:5)
+
+
+문제점 파악 :
+- author는 models/Post.js의
+var postSchema = mongoose.Schema({
+  title:{type:String, required:[true,'Title is required!']},
+  body:{type:String, required:[true,'Body is required!']},
+  author:{type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},
+  createdAt:{type:Date, default:Date.now},
+  updatedAt:{type:Date},
+});
+에서 정의되어 있음.
+
+- 현재 db에 있는 post데이터 중에 author가 없는 데이터가 있는 듯함.
+- 방법 1. 해당 post를 지우기 : board 접속 불가로 실패
+- 방법 2. db 재연결
