@@ -50,5 +50,25 @@ var postSchema = mongoose.Schema({
 에서 정의되어 있음.
 
 - 현재 db에 있는 post데이터 중에 author가 없는 데이터가 있는 듯함.
-- 방법 1. 해당 post를 지우기 : board 접속 불가로 실패
-- 방법 2. db 재연결
+
+
+해결 방법 : 해당 post를 지우기
+-> https://www.mongodb.com/cloud/atlas 접속
+-> Atlas 0 - Cluster0 - Browse Collections 접속
+-> myFirstDatabase.posts에 있는 object들
+
+_id:ObjectID("60d48d0b4c1dc02830d947af")
+title:"첫 게시글"
+body:"경로 변경하기 너무 귀찮다. 지난 파일들을 정리하는게 편할듯?"
+createdAt:2021-06-24T13:47:55.154+00:00
+__v:0
+
+_id:ObjectID("60dfd922e75cd7317415038e")
+title:"밀키스"
+body:"milkis
+milkis123"
+author:60dfd90be75cd73174150386
+createdAt:2021-07-03T03:27:30.782+00:00
+__v:0
+
+첫 게시글에 author 가 없음. 삭제 실행.
