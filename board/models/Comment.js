@@ -44,6 +44,6 @@ DB상에는 대댓글의 부모정보만 저장하지만, 웹사이트에 사용
 항목을 가상(virtual) 항목으로 추가하였습니다.
   */
 
-// model & export
-var Comment = mongoose.model('comment',commentSchema);
-module.exports = Comment;
+  // model & export
+  var Comment = mongoose.model('comment',commentSchema);
+  module.exports = Comment;
