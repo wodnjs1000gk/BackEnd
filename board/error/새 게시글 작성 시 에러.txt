@@ -2,3 +2,6 @@
 로그인 후 새 게시글 작성 시 (New 클릭) 다음과 같은 에러 발생
 
 {"stringValue":"\"new\"","valueType":"string","kind":"ObjectId","value":"new","path":"_id","reason":{},"name":"CastError","message":"Cast to ObjectId failed for value \"new\" (type string) at path \"_id\" for model \"post\""}
+
+/routes/posts.js 새로 만들어서 해결.
+어디에서 문제 생겼는지 파악해야함.

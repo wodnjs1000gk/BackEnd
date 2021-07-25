@@ -28,21 +28,21 @@ regex(/^.{4,12}$/)를 해석해 보면,
     trim:true,
     // trim은 문자열 앞뒤에 빈칸이 있는 경우 빈칸을 제거해 주는 옵션입니다.
     unique:true
-  },
-  password:{
-    type:String,
-    required:[true,'Password is required!'],
-    select:false
-  },
-  name:{
-    type:String,
-    required:[true,'Name is required!'],
-    match:[/^.{4,12}$/,'Should be 4-12 characters!'],
-    trim:true
-  },
-  email:{
-    type:String,
-    match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,'Should be a vaild email address!'],
+    },
+    password:{
+      type:String,
+      required:[true,'Password is required!'],
+      select:false
+    },
+    name:{
+      type:String,
+      required:[true,'Name is required!'],
+      match:[/^.{4,12}$/,'Should be 4-12 characters!'],
+      trim:true
+    },
+    email:{
+      type:String,
+      match:[/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,'Should be a vaild email address!'],
     /*
 / / : regex의 시작과 끝을 나타냄.
 ^   : 문자열의 시작을 나타냄.
@@ -51,8 +51,8 @@ regex(/^.{4,12}$/)를 해석해 보면,
 \.  : 특수문자 앞 백슬래쉬. \다음에 오는 문자는 특별하지 않고 문자 그대로 해석된다.
 {2,}: 2자 이상이어야 한다.
     */
-    trim:true
-  }
+      trim:true
+    }
 },{
   toObject:{virtuals:true}
 });
@@ -139,10 +139,10 @@ model.invalidate함수를 호출
           */
 
     }
-    if(user.password !== user.passwordConfirmation) {
-      user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!');
+    else if(user.password !== user.passwordConfirmation) {
+        user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!');
+      }
     }
-  }
   /*
   회원가입의 경우 password confirmation값이 없는 경우와,
   password값이 password confirmation값과 다른 경우에
@@ -170,7 +170,7 @@ model.invalidate함수를 호출
     if(user.newPassword && !passwordRegex.test(user.newPassword)){
       user.invalidate("newPassword", passwordRegexErrorMessage);
     }
-    if(user.newPassword !== user.passwordConfirmation) {
+    else if(user.newPassword !== user.passwordConfirmation) {
       user.invalidate('passwordConfirmation', 'Password Confirmation does not matched!');
     }
   }

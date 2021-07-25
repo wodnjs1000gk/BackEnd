@@ -23,6 +23,7 @@ $(function(){
 
   function convertDate(){
     $('[data-date]').each(function(index,element){
+      //console.log(element)
       var dateString = $(element).data('date');
       if(dateString){
         var date = new Date(dateString);
