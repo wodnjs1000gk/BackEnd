@@ -1,0 +1,5 @@
+새 계정 생성 시 이메일 미입력 시 Cannot Get /user 에러 메시지.
+새 계정 생성 시 전체 칸 입력 후 엔터 누르면 생성 후 계정 생성 페이지에서 이미 있는 아이디입니다. 표시
+
+/routes/users.js 의 //create 에 있는
+정상적으로 실행되었을 시 res.redirect를 /user에서 /login으로 변경
