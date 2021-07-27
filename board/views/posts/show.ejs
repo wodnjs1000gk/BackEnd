@@ -19,17 +19,7 @@
       <div class="card">
         <h5 class="card-header p-2" data-search-highlight="title"><%= post.title %></h5>
         <div class="row">
-<!--
-bootstrap의 row, col-? class를 사용해서 html element 안의 공간을
-분할할 수 있습니다. row class element안에 col-? class element를 넣은 구조인데요,
-?에는 기본적으로 1에서 12사이의 숫자가 들어갈 수 있습니다.
-예를들어 row class element안에 col-6 class element를 2개 넣어 주면
-row class element안의 공간이 6:6 즉 반반으로 나누어집니다.
-col-sm-?, col-md-?와 같이 사이즈를 지정해주면,
-화면이 작을 때(sm), 보통일 때(md), 클 때(lg), 아주 클 때(xl)로 나누어서
-적용시킬 수 있습니다.
-자세한 설명은 https://getbootstrap.com/docs/4.4/layout/grid 에서 읽어주세요.
--->
+
           <div class="col-md-7 col-lg-8 col-xl-9 order-sm-2 order-md-1">
             <div class="post-body p-2" data-search-highlight="body"><%= post.body %></div>
           </div>
@@ -39,16 +29,10 @@ col-sm-?, col-md-?와 같이 사이즈를 지정해주면,
               <div class="border-bottom pb-1 mb-1">
                 <span>Author</span> : <span data-search-highlight="author"><%= post.author ? post.author.username : "" %></span>
               </div>
-              <!-- index와 마찬가지로 show에도 author 항목을 추가하고
-              author가 있는 경우 author의 username을 표시합니다. -->
               <div><span>Created</span> : <span data-date-time="<%= post.createdAt %>"></span></div>
               <% if(post.updatedAt) { %>
                 <div><span>Updated</span> : <span data-date-time="<%= post.updatedAt %>"></span></div>
               <% } %>
-              <!--
-data-date-time이 Created, Updated 옆의 <span> element에 사용되었습니다.
-게시물이 작성된 시간, 수정된 시간이 년-월-일 시:분:초의 형태로 출력됩니다.
-            -->
             </div>
           </div>
 
@@ -63,140 +47,33 @@ data-date-time이 Created, Updated 옆의 <span> element에 사용되었습니�
             <a class="btn btn-primary" href="javascript:void(0)" onclick="confirm('Do you want to delete this?')?this.parentElement.submit():null;">Delete</a>
           </form>
         <% } %>
-        <!--
-show view에서는 뒤로가기버튼, 수정 버튼, 삭제버튼의 form에getPostQueryString
-함수가 사용되었습니다. 삭제버튼의 form에는 이미 ?_method=delete query가 달려
-있으므로 isAppended파라메터가 true가 되어야 합니다.
-        -->
       </div>
-      <!--
-로그인이 된 상태이고, 게시물의 작성자 id(post.author.id)와
-현재 로그인된 사용자의 id(currentUser.id)가 일치하는 경우에만
-edit, delete 버튼을 보여줍니다. currentUser 역시 req.locals에
-들어있어서 ejs에서 바로 사용할 수 있습니다.
-      -->
-
-      <!--
-      <div>
-        <% if(isAuthenticated && currentUser.id == user.id){ %>
-          <a class="btn btn-primary" href="/users/<%= user.username %>/edit">Edit</a>
-        <% } %>
-      </div>
-      -->
-      <!--
-로그인이 된 상태이고, 해당 user id(user.id)와 현재 로그인된
-사용자의 id(currentUser.id)가 일치하는 경우에만 edit 버튼을
-보여줍니다.
-      -->
 
       <h4 class="mt-3">Comments</h4>
-    <!--
-      <% if(comments.length){ %>
+
+      <% if(commentTrees.length){ %>
         <div class="mt-3 border-bottom">
-          <% comments.forEach(function(comment) { %>
-            <div class="border-top">
-              <% if(comment.isDeleted){ %>
-                <div class="text-muted p-2">(Deleted Commnet)</div>
-              <% } else { %>
-              <div class="row pt-1 pb-1">
-                <div class="col-3 col-md-2 col-lg-1 pl-4"><%= comment.author.username %></div>
-                <div id="comment-<%= comment._id %>" class="col-9 col-md-10 col-lg-11 <%= (commentError._id == comment._id)?'comment-edit-enabled':'' %>">
-                  <div class="comment-show">
-                    <div class="comment-text mb-3"><%= comment.text %></div>
-                    <small class="d-block">
-                      ( Created: <span data-date-time="<%= comment.createdAt %>"></span>
-                      <% if(comment.updatedAt){ %>
-                        | Updated: <span data-date-time="<%= comment.updatedAt %>"></span>
-                      <% } %>
-                      )
-                    </small>
-                    <% if(isAuthenticated && comment.author && currentUser.id == comment.author.id){ %>
-                      <small class="d-block">
-                        <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment._id %>').addClass('comment-edit-enabled')">Edit</a>
-                        |
-                        <form action="/comments/<%= comment._id %>?postId=<%= post._id %>&_method=delete<%= getPostQueryString(true) %>" method="post" class="d-inline">
-                          <a href="javascript:void(0)" onclick="confirm('Do you want to delete this?')?this.parentElement.submit():null;">Delete</a>
-                        </form>
-                      </small>
-                    <% } %>
-                  </div>
-                  <div class="comment-edit">
-                    <%- include('./partials/comment-form', {
-                      actionUrl:'/comments/' + comment._id + '?postId=' + post._id + '&_method=put',
-                      comment: comment,
-                      commentForm: commentForm,
-                      commentError: commentError,
-                    }); %>
-                  </div>
-                </div>
-              </div>
-              <% } %>
-            </div>
+          <% commentTrees.forEach(function(comment) { %>
+            <%- include('./partials/comment-show', {
+              post: post,
+              comment: comment,
+              commentForm: commentForm,
+              commentError: commentError,
+            }); %>
           <% }) %>
         </div>
       <% } %>
-    -->
-      <!-->
-DB에서 찾아진 댓글들을 표시하는 부분입니다.
-<% if(comments.length){ %>
-댓글이 존재하면(댓글배열의 길이가 존재하는 경우),
 
-<% comments.forEach(function(comment) { %>
-각각 댓글을 하나씩 돌면서
-
-<div class="col-3 col-md-2 col-lg-1 pl-4"><%= comment.author.username %></div>
-작성자,
-
-<div class="comment-text mb-3"><%= comment.text %></div>
-댓글 텍스트,
-
-(Created: <span data-date-time="<%= comment.createdAt %>"></span>)
-댓글 생성시간을 표시합니다.
-      <-->
-
-      <!--
       <div class="mt-3">
-        <form action="/comments?postId=<%= post._id %><%= getPostQueryString(true) %>" method="post">
-          <fieldset <%= !isAuthenticated?'disabled':'' %>>
-            <div class="row">
-              <div class="col-8">
-                <textarea name="text" rows="2" class="form-control <%= (commentError.errors.text)?'is-invalid':'' %>"><%= commentForm.form.text %></textarea>
-              </div>
-              <div class="col-4">
-                <button type="submit" class="btn btn-primary h-100 mr-2">Add Comment</button>
-              </div>
-            </div>
-            <% if(commentError.errors.text){ %>
-              <span class="invalid-feedback d-block"><%= commentError.errors.text.message %></span>
-            <% } %>
-          </fieldset>
-        </form>
+        <%- include('./partials/comment-form', {
+          actionUrl:'/comments?postId=' + post._id,
+          comment: {},
+          commentForm: commentForm,
+          commentError: commentError,
+          parentComment: null,
+        }); %>
       </div>
-      -->
 
-      <% if(commentTrees.length){ %>
-          <div class="mt-3 border-bottom">
-            <% commentTrees.forEach(function(comment) { %>
-              <%- include('./partials/comment-show', {
-                post: post,
-                comment: comment,
-                commentForm: commentForm,
-                commentError: commentError,
-              }); %>
-            <% }) %>
-          </div>
-        <% } %>
-
-        <div class="mt-3">
-          <%- include('./partials/comment-form', {
-            actionUrl:'/comments?postId=' + post._id,
-            comment: {},
-            commentForm: commentForm,
-            commentError: commentError,
-            parentComment: null,
-          }); %>
-        </div>
-        
     </div>
   </body>
 </html>
