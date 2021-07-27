@@ -3,6 +3,8 @@
 
 {"stringValue":"\"new\"","valueType":"string","kind":"ObjectId","value":"new","path":"_id","reason":{},"name":"CastError","message":"Cast to ObjectId failed for value \"new\" (type string) at path \"_id\" for model \"post\""}
 
+// /routes/posts.js
+
 // New
 router.get('/:id/edit', util.isLoggedin, checkPermission, function(req, res){
   ...
