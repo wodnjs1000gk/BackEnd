@@ -114,7 +114,14 @@ util.getPostQueryString = function(req, res, next){
   next();
 };
 
+// flat한 배열을 trees로 바꾸는 함수
 util.convertToTrees = function(array, idFieldName, parentIdFieldName, childrenFieldName){
+/*
+array: tree구조로 변경할 array를 받습니다.
+idFieldName: array의 member에서 id를 가지는 field의 이름을 받습니다.
+parentIdFieldName: array의 member에서 부모id를 가지는 field의 이름을 받습니다.
+childrenFieldName: 생성된 자식들을 넣을 field의 이름을 정하여 넣습니다.
+*/
   var cloned = array.slice();
 
   for(var i=cloned.length-1; i>-1; i--){
@@ -141,6 +148,6 @@ util.convertToTrees = function(array, idFieldName, parentIdFieldName, childrenFi
   }
 
   return cloned;
-}
+};
 
 module.exports = util;

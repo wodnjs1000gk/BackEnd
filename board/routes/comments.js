@@ -54,6 +54,11 @@ router.put('/:id', util.isLoggedin, checkPermission, checkPostId, function(req, 
     if(err){
       req.flash('commentForm', { _id: req.params.id, form:req.body });
       req.flash('commentError', { _id:req.params.id, parentComment:req.body.parentComment, errors:util.parseError(err) });
+      /*
+      댓글 생성과정에서 발생한 에러: _id항목의 값이 없고, parentComment항목에도 값이 없음
+      대댓글 생성과정에서 발생한 에러: _id항목의 값이 없지만, parentComment항목에는 값이 있음
+      댓글 수정과정에서 생성된 에러: _id항목의 값이 있고, parentComment항목에도 값이 있음
+      */
     }
     return res.redirect('/posts/'+post._id+res.locals.getPostQueryString());
   });

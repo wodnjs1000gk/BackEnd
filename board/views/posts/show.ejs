@@ -131,6 +131,7 @@ edit, delete 버튼을 보여줍니다. currentUser 역시 req.locals에
         <div class="mt-3 border-bottom">
           <% commentTrees.forEach(function(comment) { %>
             <%- include('./partials/comment-show', {
+              <!--각각의 댓글은 이제 partial로 생성됩니다.-->
               post: post,
               comment: comment,
               commentForm: commentForm,
@@ -147,6 +148,10 @@ edit, delete 버튼을 보여줍니다. currentUser 역시 req.locals에
           commentForm: commentForm,
           commentError: commentError,
           parentComment: null,
+          <!--
+comment-form에 parentComment 파라메터가 추가되었습니다.
+생성시에는 값이 없으므로 null을 전달합니다.
+          -->
         }); %>
       </div>
 

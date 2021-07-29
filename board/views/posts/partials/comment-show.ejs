@@ -23,10 +23,10 @@
             <% } %>
             )
           </small>
-          <% if(isAuthenticated){ %> <!-- 4-1 -->
+          <% if(isAuthenticated){ %>
             <small class="d-block">
-  <!-- 2 --> <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment._id %>').addClass('comment-reply-enabled')">reply</a>
-  <!-- 4-2 --> <% if(comment.author && currentUser.id == comment.author.id){ %>
+              <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment._id %>').addClass('comment-reply-enabled')">reply</a>
+                <% if(comment.author && currentUser.id == comment.author.id){ %>
                 |
                 <a href="javascript:void(0)" onclick="$('.comment-reply-enabled').removeClass('comment-reply-enabled'); $('.comment-edit-enabled').removeClass('comment-edit-enabled'); $('#comment-<%= comment._id %>').addClass('comment-edit-enabled')">Edit</a>
                 |
@@ -35,6 +35,9 @@
                 </form>
               <% } %>
             </small>
+            <!--
+            Reply버튼은 로그인한(isAuthenticated == true) 사용자 모두에게 보이도록, edit, delete 버튼은 글작성자 본인에게만 보이도록 합니다.
+            -->
           <% } %>
         </div>
         <div class="comment-edit">
@@ -46,7 +49,7 @@
             parentComment: null,
           }); %>
         </div>
-        <div class="comment-reply"> <!-- 3 -->
+        <div class="comment-reply">
           <%- include('comment-form', {
             actionUrl:'/comments?postId=' + post._id,
             comment: {},
@@ -59,7 +62,7 @@
     </div>
   <% } %>
 
-  <div class="ml-3"> <!-- 5 -->
+  <div class="ml-3">
     <% if(comment.childComments){ %>
       <% comment.childComments.forEach(function(childComment) { %>
         <%- include('comment-show', {
@@ -71,5 +74,7 @@
       <% }) %>
     <% } %>
   </div>
-
+  <!--
+  댓글의 대댓글들을 다시 comment-show ejs파일로 보냅니다.
+  -->
 </div>

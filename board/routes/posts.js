@@ -237,6 +237,12 @@ DB에서 두개 이상의 데이터를 가져와야 하는 경우 Promise.all �
       var commentTrees = util.convertToTrees(comments, '_id','parentComment','childComments');
       res.render('posts/show', { post:post, commentTrees:commentTrees, commentForm:commentForm, commentError:commentError});
     })
+    /*
+comment 모델에 맞는 값들을 converToTrees함수로 전달하여
+comment 모델을 tree 구조로 변경하고 post show view에
+전달합니다. flat comments와 구별하기 위해 commentTrees로
+전달하는 이름을 변경하였습니다.
+    */
     .catch((err) => {
       console.log('err: ', err);
       return res.json(err);

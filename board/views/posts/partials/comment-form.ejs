@@ -9,10 +9,18 @@
 <form action="<%= actionUrl %><%= getPostQueryString(true) %>" method="post">
   <fieldset <%= !isAuthenticated?'disabled':'' %>>
     <% if(parentComment){ %>
+      <!--
+      parentComment가 전달되면 form에 hidden 항목으로 form에
+      추가합니다. hidden type의 input은 화면에 표시되지는
+      않지만 form submit시 데이터가 함께 전달됩니다.
+      -->
       <input type="hidden" name="parentComment" value="<%= parentComment %>">
     <% } %>
     <div class="row">
       <div class="col-8">
+        <!--
+        에러메세지가 현재 form에 적용되는지를 알 수 있습니다.
+        -->
         <textarea name="text" rows="2" class="form-control <%= (commentError._id == comment._id && commentError.parentComment == parentComment && commentError.errors.text)?'is-invalid':'' %>"><%= (commentForm._id == comment._id)?commentForm.form.text:comment.text %></textarea>
       </div>
       <div class="col-4">
@@ -20,6 +28,9 @@
           <button type="submit" class="btn btn-primary h-100 mr-2 pl-4 pr-4">Edit</button>
           <a href="javascript:void(0)" onclick="$('#comment-<%= comment._id %>').removeClass('comment-edit-enabled')">Cancel</a>
         <% } else if(parentComment) {%>
+          <!--
+          comment._id가 없고 parentComment가 있는 경우 대댓글 버튼과 취소 문구를 넣어줍니다.
+          -->
           <button type="submit" class="btn btn-primary h-100 mr-2">Add Reply</button>
           <a href="javascript:void(0)" onclick="$('#comment-<%= parentComment %>').removeClass('comment-reply-enabled')">Cancel</a>
         <% } else { %>
@@ -27,7 +38,7 @@
         <% } %>
       </div>
     </div>
-    <% if(commentError._id == comment._id && commentError.parentComment == parentComment && commentError.errors.text){ %>
+    <% if(commentError._id == comment._id && commentError.parentComment == parentComment && commentError.errors.text){ %> <!-- 2 -->
       <span class="invalid-feedback d-block"><%= commentError.errors.text.message %></span>
     <% } %>
   </fieldset>
