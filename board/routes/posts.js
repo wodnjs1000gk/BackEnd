@@ -127,15 +127,35 @@ limit함수는 일정한 수만큼만 검색된 결과를 보여주는 함수입
     var posts = [];
 
     if(searchQuery) {
-      var count = await Post.countDocuments(searchQuery);
-      maxPage = Math.ceil(count/limit);
-      posts = await Post.find(searchQuery)
-        .populate('author')
-        .sort('-createdAt')
-        .skip(skip)
-        .limit(limit)
-        .exec();
-    }
+    var count = await Post.countDocuments(searchQuery);
+    maxPage = Math.ceil(count/limit);
+    posts = await Post.aggregate([ // 1
+      { $match: searchQuery }, // 2
+      { $lookup: { // 3
+          from: 'users',
+          localField: 'author',
+          foreignField: '_id',
+          as: 'author'
+      } },
+      { $unwind: '$author' }, // 4
+      { $sort : { createdAt: -1 } }, // 5
+      { $skip: skip }, // 6
+      { $limit: limit }, // 7
+      { $lookup: { // 8
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'post',
+          as: 'comments'
+      } },
+      { $project: { // 9
+          title: 1,
+          author: {
+            username: 1,
+          },
+          createdAt: 1,
+          commentCount: { $size: '$comments'} // 10
+      } },
+    ]).exec();
 
   res.render('posts/index', {
     posts:posts,

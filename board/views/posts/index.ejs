@@ -37,8 +37,13 @@ string을 전달해 줍니다. view에서는 res.locals의 항목들을 바로 �
 있기때문에 res.locals.getPostQueryString가 아니라 getPostQueryString로
 호출합니다.
                 -->
-                <a href="/posts/<%= post._id %><%= getPostQueryString() %>">
-                  <div data-search-highlight="title" class="ellipsis"><%= post.title %></div>
+                <a href="/posts/<%= post._id %><%= getPostQueryString() %>" class="title-container">
+                  <div data-search-highlight="title" class="title-ellipsis ellipsis float-left">
+                    <span class="title-text"><%= post.title %></span>
+                  </div>
+       <!-- 2 --> <% if(post.commentCount){ %>
+                    <small class="title-comments d-inline-block pl-2">(<%= post.commentCount %>)</small>
+                  <% } %>
                 </a>
               </td>
               <td class="author"> <!-- 2 -->
