@@ -129,33 +129,106 @@ limit함수는 일정한 수만큼만 검색된 결과를 보여주는 함수입
     if(searchQuery) {
     var count = await Post.countDocuments(searchQuery);
     maxPage = Math.ceil(count/limit);
-    posts = await Post.aggregate([ // 1
-      { $match: searchQuery }, // 2
-      { $lookup: { // 3
+    posts = await Post.aggregate([
+      /*
+mongoose에서 모델.aggregate함수로 모델에 대한 aggregation을 mongodb로 전달할 수 있습니다.
+함수에 전달되는 배열의 오브젝트 형태는 mongoDB에서 사용되는 오브젝트와 정확히 일치하므로,
+여기서부터는 mongoDB의 aggregation 문서(https://docs.mongodb.com/manual/aggregation)를
+참고할 수 있습니다.
+      */
+      { $match: searchQuery },
+      /*
+      모델.find함수와 동일한 역할을 합니다. 즉,
+      Post.find(searchQuery).exec();
+      와
+      Post.aggregate([{ $match: searchQuery }]).exec();
+      는 정확히 같은 일을 합니다. 그럼 aggregation을 왜 써야 하는가하면,
+      aggregation에서만 할 수 있는 복잡한 일들이 있습니다. 이 때문에 간단한 일을 할 때는
+      그냥 일반 모델.함수의 형태로 사용하고, aggregation으로만 할 수 있는 일이 개입되면
+      이처럼 aggregation으로 고쳐주면 되겠습니다.
+      */
+      { $lookup: {
           from: 'users',
           localField: 'author',
           foreignField: '_id',
           as: 'author'
       } },
-      { $unwind: '$author' }, // 4
-      { $sort : { createdAt: -1 } }, // 5
-      { $skip: skip }, // 6
-      { $limit: limit }, // 7
-      { $lookup: { // 8
+      /*
+      $lookup 오브젝트(https://docs.mongodb.com/manual/reference/operator/aggregation/lookup)는
+      SQL의 join과 같이 현재 collection에 다른 collection을 이어주는 역할을 합니다.
+      네가지 하위 항목을 필수로 갖습니다.
+
+      from: 연결할 다른 collection의 이름을 적습니다.
+      localField: 현재 collection의 항목을 적습니다.
+      foreignField: 다른 collection의 항목을 적습니다.
+      as: 다른 collection을 담을 항목의 이름을 적습니다.
+          이 항목의 이름으로 다른 collection의 데이터가 배열로 생성됩니다.
+      이렇게 작성하면 현재 collection의 localField의 값과, from에 적힌 collection의
+      foreignField의 값이 일치하는 데이터들을 골라서 as에 적힌 항목으로 생성하게 됩니다.
+
+      user collection에서 (mongoose는 collection 이름을 항상 영어 복수형으로 생성합니다.
+      그러므로 'from'에 user가 아닌 users로 적어야 합니다) user._id가 현재 post의 author와
+      일치하는 user를 모두 찾아 post.author에 배열로 생성합니다. 기존의 post.author의 값은
+      지워집니다.
+      */
+      { $unwind: '$author' },
+      /*
+      배열을 flat하게 풀어주는 역할을 합니다.
+
+      [
+        { _id:1, name:'john', classes:['math', 'history', 'art'] }
+      ]
+      위와 같은 document가 testDocuments 콜렉션에 있다고 가정하면,
+      TestDocument.aggregate([{ $unwind: '$classes'}])
+      위와 같이 unwind 명령어를 사용할 수 있습니다.
+
+      '$classes'처럼 문자열이 '$'로 시작되면 해당 값은 document의 항목이름임을 나타냅니다.
+      즉, testDocument의 classes항목 이름을 값으로 전달하기 위해 '$classes'라고 적습니다.
+      */
+      { $sort : { createdAt: -1 } },
+      /*
+      모델.sort함수와 동일한 역할을 합니다. 다만 '-createdAt'과 같은 형태는 사용할 수 없고,
+      { createdAt: -1 }의 형태로 사용해야 합니다. (모델.sort은 두가지 형태를 모두 사용할 수
+      있습니다.)
+      */
+      { $skip: skip },
+      { $limit: limit },
+      /*
+
+      변경 전 코드와 현재 코드는 정확히 같은 결과를 가져옵니다.
+      변경 전 코드가 더 쉽기 때문에 aggregate를 사용하지 않고 코드를 작성 할 수 있다면
+      굳지 aggregate를 사용하지 않아도 됩니다.
+      변경 전의 .populate, .sort, .skip 등등은 mongo DB에서 제공되는 함수가 아니라, mongoose library에서 제공되는 함수들입니다.
+
+      이제 우리는 게시물에 댓글수를 추가하려고 하는데, mongoose library에서는 해당 작업을 하는 코드가 없기 때문에 전체를 aggregate 함수로 수정해야 합니다.
+      */
+      { $lookup: {
           from: 'comments',
           localField: '_id',
           foreignField: 'post',
           as: 'comments'
       } },
-      { $project: { // 9
+      /*
+      또다시 $lookup을 사용해서 post._id와 comment.post를 연결합니다.
+      하나의 post에 여러개의 comments가 생길 수 있으므로 이번에는 $unwind를 사용하지 않습니다.
+      */
+      { $project: {
           title: 1,
           author: {
             username: 1,
           },
           createdAt: 1,
-          commentCount: { $size: '$comments'} // 10
+          commentCount: { $size: '$comments'}
       } },
+      /*
+      $project 오브젝트(https://docs.mongodb.com/manual/reference/operator/aggregation/project)는
+      데이터를 원하는 형태로 가공하기 위해 사용됩니다. $project:바로 다음에 원하는 schema를
+      넣어주면 됩니다. 이때 1은 보여주기를 원하는 항목을 나타냅니다.
+      다만 _id는 반드시 표시되고 숨길 수 없습니다. 즉 title: 1은 '데이터의 title항목을
+      보여줄 것'이라는 뜻입니다.
+      */
     ]).exec();
+  }
 
   res.render('posts/index', {
     posts:posts,

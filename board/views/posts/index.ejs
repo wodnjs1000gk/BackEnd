@@ -32,18 +32,25 @@
               <td>
           <!-- <a href="/posts/<%= post._id %><%= getPostQueryString() %>"><div class="ellipsis"><%= post.title %></div></a> -->
                 <!--
-게시판에서 게시물 제목을 눌러 show route으로 가는 경우 page, limit query
-string을 전달해 줍니다. view에서는 res.locals의 항목들을 바로 사용할 수
-있기때문에 res.locals.getPostQueryString가 아니라 getPostQueryString로
-호출합니다.
+                게시판에서 게시물 제목을 눌러 show route으로 가는 경우 page, limit query
+                string을 전달해 줍니다. view에서는 res.locals의 항목들을 바로 사용할 수
+                있기때문에 res.locals.getPostQueryString가 아니라 getPostQueryString로
+                호출합니다.
                 -->
                 <a href="/posts/<%= post._id %><%= getPostQueryString() %>" class="title-container">
+                  <!--
+                  ellipsis(텍스트가 너무 길 경우 해당 범위 밖의 텍스트를 '...'로 표시하는 것)를 구현하기
+                  위해 title-text, title-comments등의 CSS class들이 추가 되었습니다.
+                  -->
                   <div data-search-highlight="title" class="title-ellipsis ellipsis float-left">
                     <span class="title-text"><%= post.title %></span>
                   </div>
-       <!-- 2 --> <% if(post.commentCount){ %>
+                  <% if(post.commentCount){ %>
                     <small class="title-comments d-inline-block pl-2">(<%= post.commentCount %>)</small>
                   <% } %>
+                  <!--
+                  댓글의 수는 post route를 통해서 이미 post.commentCount에 저장되어 있으므로 어떻게 보여줄지만 고민하면됩니다. 
+                  -->
                 </a>
               </td>
               <td class="author"> <!-- 2 -->
