@@ -14,7 +14,9 @@
 
         <thead class="thead-light">
           <tr>
+            <th scope="col" class="numId">#</th> <!-- 1 -->
             <th scope="col">Title</th>
+            <th scope="col" class="views">Views</th>  <!-- 2 -->
             <th scope="col" class="author">Author</th>
             <!-- table의 theader에 author 항목을 추가합니다. -->
             <th scope="col" class="date">Date</th>
@@ -24,11 +26,12 @@
         <tbody>
           <% if(posts == null || posts.length == 0){ %>
             <tr>
-              <td colspan=2> There is no data to show :( </td>
+              <td colspan=5> There is no data to show :( </td>
             </tr>
           <% } %>
           <% posts.forEach(function(post) { %>
             <tr>
+              <td class="numId"><%= post.numId %></td>
               <td>
           <!-- <a href="/posts/<%= post._id %><%= getPostQueryString() %>"><div class="ellipsis"><%= post.title %></div></a> -->
                 <!--
@@ -49,10 +52,11 @@
                     <small class="title-comments d-inline-block pl-2">(<%= post.commentCount %>)</small>
                   <% } %>
                   <!--
-                  댓글의 수는 post route를 통해서 이미 post.commentCount에 저장되어 있으므로 어떻게 보여줄지만 고민하면됩니다. 
+                  댓글의 수는 post route를 통해서 이미 post.commentCount에 저장되어 있으므로 어떻게 보여줄지만 고민하면됩니다.
                   -->
                 </a>
               </td>
+              <td class="views"><%= post.views %></td>
               <td class="author"> <!-- 2 -->
            <!-- <div class="ellipsis"><%= post.author ? post.author.username : "" %></div> -->
               <!-- table의 tbody에 author 항목을 추가하고

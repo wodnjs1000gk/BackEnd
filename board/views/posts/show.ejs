@@ -12,12 +12,12 @@
         <ol class="breadcrumb p-1 pl-2 pr-2">
           <li class="breadcrumb-item"><a href="/">Home</a></li>
           <li class="breadcrumb-item"><a href="/posts">Board</a></li>
-          <li class="breadcrumb-item active" aria-current="page"><%= post.title %></li>
+          <li class="breadcrumb-item active" aria-current="page"><%= post.numId %>. <%= post.title %></li>
         </ol>
       </nav>
 
       <div class="card">
-        <h5 class="card-header p-2" data-search-highlight="title"><%= post.title %></h5>
+        <h5 class="card-header p-2" data-search-highlight="title"><%= post.numId %>. <%= post.title %></h5>
         <div class="row">
           <!--
           bootstrap의 row, col-? class를 사용해서 html element 안의 공간을
@@ -38,6 +38,7 @@
             <div class="post-info card m-2 p-2">
               <div class="border-bottom pb-1 mb-1">
                 <span>Author</span> : <span data-search-highlight="author"><%= post.author ? post.author.username : "" %></span>
+                <div><span>Views</span> : <span><%= post.views %></span></div>
               </div>
               <!-- index와 마찬가지로 show에도 author 항목을 추가하고
               author가 있는 경우 author의 username을 표시합니다. -->

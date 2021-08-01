@@ -217,6 +217,8 @@ mongoose에서 모델.aggregate함수로 모델에 대한 aggregation을 mongodb
           author: {
             username: 1,
           },
+          views: 1, // 1
+          numId: 1, // 1
           createdAt: 1,
           commentCount: { $size: '$comments'}
       } },
@@ -327,6 +329,8 @@ DB에서 두개 이상의 데이터를 가져와야 하는 경우 Promise.all �
       Comment.find({post:req.params.id}).sort('createdAt').populate({ path: 'author', select: 'username' })
     ])
     .then(([post, comments]) => {
+      post.views++; // 2
+      post.save();  // 2
       var commentTrees = util.convertToTrees(comments, '_id','parentComment','childComments');
       res.render('posts/show', { post:post, commentTrees:commentTrees, commentForm:commentForm, commentError:commentError});
     })
