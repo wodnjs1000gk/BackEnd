@@ -5,8 +5,8 @@ var postSchema = mongoose.Schema({
   title:{type:String, required:[true,'Title is required!']},
   body:{type:String, required:[true,'Body is required!']},
   author:{type:mongoose.Schema.Types.ObjectId, ref:'user', required:true},
-  views:{type:Number, default:0}, // 1
-  numId:{type:Number}, // 2
+  views:{type:Number, default:0},
+  numId:{type:Number},
   createdAt:{type:Date, default:Date.now},
   updatedAt:{type:Date},
 });
@@ -17,7 +17,7 @@ mongoose에 알립니다. 이렇게 하여 user의 user.id와 post의 post.autho
 연결되어 user와 post의 relationship이 형성되었습니다.
 */
 
-postSchema.pre('save', async function (next){ // 3
+postSchema.pre('save', async function (next){
   var post = this;
   if(post.isNew){
     counter = await Counter.findOne({name:'posts'}).exec();
@@ -28,6 +28,17 @@ postSchema.pre('save', async function (next){ // 3
   }
   return next();
 });
+/*
+Schema.pre함수는 첫번째 파라미터로 설정된 event가 일어나기
+전(pre)에 먼저 callback 함수를 실행시킵니다.
+"save" event는 Model.create, model.save함수 실행시
+발생하는 event입니다.
+
+새 post가 생성되는 경우(post.isNew가 true)에만 'posts'
+counter를 읽어오고, 숫자를 증가시키고, post의 numId에
+counter를 넣어줍니다. 만약 'posts' counter가 존재하지
+않는다면 생성합니다.
+*/
 
 // model & export
 var Post = mongoose.model('post', postSchema);
