@@ -1,0 +1,21 @@
+1. 게시글 번호 표시 안됨
+앞으로 생성하는 게시글에만 해당되는지 확인 필요
+
+2. 게시글 클릭 시 아래의 오류 메시지 출력
+SyntaxError: Unexpected token '-' in C:\workspace\BackEnd\board\views\posts\show.ejs while compiling ejs
+
+If the above error is not helpful, you may want to try EJS-Lint:
+https://github.com/RyanZim/EJS-Lint
+Or, if you meant to create an async function, pass `async: true` as an option.
+    at new Function (<anonymous>)
+    at Template.compile (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:662:12)
+    at Object.compile (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:396:16)
+    at handleCache (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:233:18)
+    at tryHandleCache (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:272:16)
+    at View.exports.renderFile [as engine] (C:\workspace\BackEnd\board\node_modules\ejs\lib\ejs.js:489:10)
+    at View.render (C:\workspace\BackEnd\board\node_modules\express\lib\view.js:135:8)
+    at tryRender (C:\workspace\BackEnd\board\node_modules\express\lib\application.js:640:10)
+    at Function.render (C:\workspace\BackEnd\board\node_modules\express\lib\application.js:592:3)
+    at ServerResponse.render (C:\workspace\BackEnd\board\node_modules\express\lib\response.js:1012:7)
+    at C:\workspace\BackEnd\board\routes\posts.js:335:11
+    at processTicksAndRejections (internal/process/task_queues.js:95:5)

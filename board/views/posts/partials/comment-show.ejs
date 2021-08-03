@@ -1,5 +1,3 @@
-<!-- views/posts/partials/comment-show.ejs -->
-
 <%/*
  post
  comment
@@ -35,9 +33,9 @@
                 </form>
               <% } %>
             </small>
-            <!--
+            <%/* <!--
             Reply버튼은 로그인한(isAuthenticated == true) 사용자 모두에게 보이도록, edit, delete 버튼은 글작성자 본인에게만 보이도록 합니다.
-            -->
+            --> */%>
           <% } %>
         </div>
         <div class="comment-edit">
@@ -74,7 +72,4 @@
       <% }) %>
     <% } %>
   </div>
-  <!--
-  댓글의 대댓글들을 다시 comment-show ejs파일로 보냅니다.
-  -->
 </div>
