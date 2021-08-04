@@ -19,3 +19,5 @@ Or, if you meant to create an async function, pass `async: true` as an option.
     at ServerResponse.render (C:\workspace\BackEnd\board\node_modules\express\lib\response.js:1012:7)
     at C:\workspace\BackEnd\board\routes\posts.js:335:11
     at processTicksAndRejections (internal/process/task_queues.js:95:5)
+
+3. 게시글 생성 시도 시 Submit을 누르면 Back 버튼 위에 {}만 생기고 게시글 생성이 안됨
