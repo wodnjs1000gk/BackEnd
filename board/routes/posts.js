@@ -2,9 +2,12 @@
 
 var express  = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer({ dest: 'uploadedFiles/' })
 var Post = require('../models/Post');
 var User = require('../models/User');
 var Comment = require('../models/Comment');
+var File = require('../models/File');
 var util = require('../util');
 // 게시판 - User Error 처리에서 변경된 것과 동일하게 변경되었습니다.
 
@@ -264,7 +267,9 @@ new, create, edit, update, destroy route에 util.isLoggedin를
 */
 
 // create
-router.post('/', util.isLoggedin, function(req, res){
+router.post('/', util.isLoggedin, upload.single('attachment'), async function(req, res){
+  var attachment = req.file?await File.createNewInstance(req.file, req.user._id):undefined;
+  req.body.attachment = attachment;
   req.body.author = req.user._id;
   //글을 작성할때는 req.user._id를 가져와서 post의 author에 기록합니다.
   //req.user는 로그인을 하면 passport에서 자동으로 생성해 줍니다.
@@ -273,6 +278,10 @@ router.post('/', util.isLoggedin, function(req, res){
       req.flash('post', req.body);
       req.flash('errors', util.parseError(err));
       return res.redirect('/posts/new'+res.locals.getPostQueryString());
+    }
+    if(attachment){
+      attachment.postId = post._id;
+      attachment.save();
     }
     res.redirect('/posts'+res.locals.getPostQueryString(false, { page:1, searchText:'' }));
     /*
@@ -325,7 +334,7 @@ DB에서 두개 이상의 데이터를 가져와야 하는 경우 Promise.all �
   var commentError = req.flash('commentError')[0] || { _id:null, parentComment: null, errors:{}};
 
   Promise.all([
-      Post.findOne({_id:req.params.id}).populate({ path: 'author', select: 'username' }),
+      Post.findOne({_id:req.params.id}).populate({ path: 'author', select: 'username' }).populate({path:'attachment',match:{isDeleted:false}}),
       Comment.find({post:req.params.id}).sort('createdAt').populate({ path: 'author', select: 'username' })
     ])
     .then(([post, comments]) => {

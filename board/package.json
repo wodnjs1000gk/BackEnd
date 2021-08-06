@@ -2,7 +2,7 @@
   "name": "board",
   "version": "1.0.0",
   "description": "SJW node.js practice - board",
-  "main": "index_reply.js",
+  "main": "index_file-upload.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +21,7 @@
     "express-session": "^1.17.2",
     "method-override": "^3.0.0",
     "mongoose": "^5.13.4",
+    "multer": "^1.4.2",
     "nodemon": "^2.0.12",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
