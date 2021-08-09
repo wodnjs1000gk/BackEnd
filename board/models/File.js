@@ -1,9 +1,11 @@
 // models/File.js
 
 var mongoose = require('mongoose');
+var fs = require('fs');
+var path = require('path');
 
 // schema
-var fileSchema = mongoose.Schema({ // 1
+var fileSchema = mongoose.Schema({
   originalFileName:{type:String},
   serverFileName:{type:String},
   size:{type:Number},
@@ -11,8 +13,6 @@ var fileSchema = mongoose.Schema({ // 1
   postId:{type:mongoose.Schema.Types.ObjectId, ref:'post'},
   isDeleted:{type:Boolean, default:false},
 });
-<<<<<<< HEAD
-=======
 /*
 originalFileName: 업로드된 파일명입니다.
 serverFileName: 같은 이름의 파일이 업로드되는 경우를 대비하여 모든 업로드된 파일은 파일명이
@@ -25,7 +25,24 @@ postId: 이 파일이 어느 post와 관련있는지를 기록합니다. 아마 
 isDeleted: comment와 마찬가지로 파일을 지우는 경우에 실제 파일이나 DB의 file 데이터를 지우지
             않고 isDeleted를 이용하여 처리합니다.
 */
->>>>>>> 15f15512e7db351a4c00e7b81cd243bf4d58bc9e
+
+// instance methods // 3
+fileSchema.methods.processDelete = function(){ // 4
+  this.isDeleted = true;
+  this.save();
+};
+fileSchema.methods.getFileStream = function(){
+  var stream;
+  var filePath = path.join(__dirname,'..','uploadedFiles',this.serverFileName); // 5-1
+  var fileExists = fs.existsSync(filePath); // 5-2
+  if(fileExists){ // 5-3
+    stream = fs.createReadStream(filePath);
+  }
+  else { // 5-4
+    this.processDelete();
+  }
+  return stream; // 5-5
+};
 
 // model & export
 var File = mongoose.model('file', fileSchema);
@@ -40,8 +57,6 @@ File.createNewInstance = async function(file, uploadedBy, postId){ // 2
       postId:postId,
     });
 };
-<<<<<<< HEAD
-=======
 /*
 createNewInstance함수는 file, uploadedBy, postId를 받아 file모델의 객체을 DB에 생성하고
 생성한 객체(인스턴스)를 리턴합니다. 함수에 전달되는 file 인자는 multer로 생성된 file 정보가
@@ -49,6 +64,5 @@ createNewInstance함수는 file, uploadedBy, postId를 받아 file모델의 객�
 (https://www.npmjs.com/package/multer#file-information) 에서 볼 수도 있고,
 아니면 console.log나 디버깅으로 직접 살펴볼 수도 있습니다.
 */
->>>>>>> 15f15512e7db351a4c00e7b81cd243bf4d58bc9e
 
 module.exports = File;

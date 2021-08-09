@@ -8,8 +8,6 @@ var postSchema = mongoose.Schema({
   views:{type:Number, default:0},
   numId:{type:Number},
   attachment:{type:mongoose.Schema.Types.ObjectId, ref:'file'},
-<<<<<<< HEAD
-=======
   /*
   file와 post의 관계를 만들어주는 부분입니다.
   post의 file ref(reference)는 현재 게시물이 가지고 있는 file을 ref로 가지고 있는 것이고,
@@ -17,9 +15,8 @@ var postSchema = mongoose.Schema({
 
   즉, 게시물에 파일이 첨부되었다가 첨부파일을 새로 업로드하게 되면 post는 두번째 업로드된
   파일만 ref로 가지게 됩니다. 이때 만약 file에 post ref가 없다면 첫번째 업로드된 파일은
-  어느 post를 위해 업로드되었는지 그 정보를 잃거 되므로 postId를 따로 기록하는 것입니다. 
+  어느 post를 위해 업로드되었는지 그 정보를 잃거 되므로 postId를 따로 기록하는 것입니다.
   */
->>>>>>> 15f15512e7db351a4c00e7b81cd243bf4d58bc9e
   createdAt:{type:Date, default:Date.now},
   updatedAt:{type:Date},
 });
