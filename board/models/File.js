@@ -3,6 +3,12 @@
 var mongoose = require('mongoose');
 var fs = require('fs');
 var path = require('path');
+/*
+fs는 File System의 약어로 컴퓨터의 파일을 조작할 수 있는 node module입니다.
+package를 따로 설치할 필요없이 node.js에서 기본적으로 제공됩니다.
+
+path 역시 node.js에서 기본적으로 제공되며, 폴더및 파일의 path를 조작할 수 있습니다.
+*/
 
 // schema
 var fileSchema = mongoose.Schema({
@@ -26,11 +32,15 @@ isDeleted: comment와 마찬가지로 파일을 지우는 경우에 실제 파�
             않고 isDeleted를 이용하여 처리합니다.
 */
 
-// instance methods // 3
-fileSchema.methods.processDelete = function(){ // 4
+// instance methods
+fileSchema.methods.processDelete = function(){
   this.isDeleted = true;
   this.save();
 };
+/*
+삭제요청을 처리합니다. 실제 파일을 지우지는 않고, file의 isDeleted항목을
+true로 변경하여 저장하는 일만 합니다.
+*/
 fileSchema.methods.getFileStream = function(){
   var stream;
   var filePath = path.join(__dirname,'..','uploadedFiles',this.serverFileName); // 5-1
@@ -43,6 +53,12 @@ fileSchema.methods.getFileStream = function(){
   }
   return stream; // 5-5
 };
+/*
+서버 파일의 스트림(stream)을 생성하여 return합니다.
+스트림은 binary 데이터를 조작할 수 있는 다리로 생각하면 됩니다.
+일단 컴퓨터에 있는 binary 파일을 프로그램에서 읽거나 수정하려면
+스트림이라는 것을 만들어야 한다는 것만 꼭 기억해 줍시다.
+*/
 
 // model & export
 var File = mongoose.model('file', fileSchema);
