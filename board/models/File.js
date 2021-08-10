@@ -43,15 +43,15 @@ true로 변경하여 저장하는 일만 합니다.
 */
 fileSchema.methods.getFileStream = function(){
   var stream;
-  var filePath = path.join(__dirname,'..','uploadedFiles',this.serverFileName); // 5-1
-  var fileExists = fs.existsSync(filePath); // 5-2
-  if(fileExists){ // 5-3
+  var filePath = path.join(__dirname,'..','uploadedFiles',this.serverFileName); 
+  var fileExists = fs.existsSync(filePath);
+  if(fileExists){
     stream = fs.createReadStream(filePath);
   }
-  else { // 5-4
+  else {
     this.processDelete();
   }
-  return stream; // 5-5
+  return stream;
 };
 /*
 서버 파일의 스트림(stream)을 생성하여 return합니다.
