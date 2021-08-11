@@ -54,6 +54,9 @@
                   <!--
                   댓글의 수는 post route를 통해서 이미 post.commentCount에 저장되어 있으므로 어떻게 보여줄지만 고민하면됩니다.
                   -->
+                  <% if(post.attachment){ %>
+                    <small class="title-attachment d-inline-block pl-2">📁</small>
+                  <% } %>
                 </a>
               </td>
               <td class="views"><%= post.views %></td>
