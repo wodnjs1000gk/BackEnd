@@ -57,6 +57,11 @@
                   <% if(post.attachment){ %>
                     <small class="title-attachment d-inline-block pl-2">📁</small>
                   <% } %>
+                  <!--
+                  post index route에 의해 게시물에 첨부파일이 있는 경우 post.attachment의
+                  값이 true 설정되므로 이 값을 이용해 첨부파일이 있는지 없는지를 표시해 줄 수
+                  있습니다.
+                  -->
                 </a>
               </td>
               <td class="views"><%= post.views %></td>

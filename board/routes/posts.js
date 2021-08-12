@@ -216,23 +216,27 @@ mongoose에서 모델.aggregate함수로 모델에 대한 aggregation을 mongodb
       또다시 $lookup을 사용해서 post._id와 comment.post를 연결합니다.
       하나의 post에 여러개의 comments가 생길 수 있으므로 이번에는 $unwind를 사용하지 않습니다.
       */
-      { $lookup: { // 1
+      { $lookup: { // post에 file을 $lookup을 통해 post.attachment로 연결합니다.
           from: 'files',
           localField: 'attachment',
           foreignField: '_id',
           as: 'attachment'
       } },
-      { $unwind: { // 2
+      { $unwind: {
         path: '$attachment',
         preserveNullAndEmptyArrays: true
       } },
+      /*
+      $lookup은 항상 배열로 해당 조건을 만족하는 모든 데이터를 배열로 연결하는 특징이 있고,
+      이 배열을 풀어주려면 $unwind를 사용합니다.
+      */
       { $project: {
           title: 1,
           author: {
             username: 1,
           },
-          views: 1, // 1
-          numId: 1, // 1
+          views: 1,
+          numId: 1,
           createdAt: 1,
           commentCount: { $size: '$comments'}
       } },
