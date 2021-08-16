@@ -17,7 +17,7 @@
         </ol>
       </nav>
 
-      <form action="/posts/<%= post._id %>?_method=put<%= getPostQueryString(true) %>" method="post">
+<form action="/posts/<%= post._id %>?_method=put<%= getPostQueryString(true) %>" enctype="multipart/form-data" method="post">
 
         <div class="form-group">
           <label for="title">Title</label>
@@ -39,7 +39,11 @@
               </div>
             </div>
           <% } %>
-          <input type="file" id="newAttachment" class="form-control-file <%= post.attachment?'d-none':'' %>" name="newAttachment"> <!-- 2-5 -->
+          <input type="file" id="newAttachment" class="form-control-file <%= post.attachment?'d-none':'' %>" name="newAttachment">
+          <!--
+          파일 업로드 버튼입니다. 첨부파일이 있는 경우 'd-none' css class가 추가되어 숨겨져 있다가,
+          2-4번의 버튼을 누르면 보여집니다. 첨부된 파일은 'newAttachment'로 서버에 전달됩니다.
+          -->
         </div>
 
         <div class="form-group">
